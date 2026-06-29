@@ -5,19 +5,25 @@ import App from './App.jsx'
 
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import {Dashboard, Home, Login, Result, Signup} from './pages'
+import {Dashboard,Login, Result, Signup,History,Settings} from './pages'
 
-const router= createBrowserRouter(
+const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element={<Layout/>}>
-      <Route index element={<Home/>}></Route>
-      <Route path='Dashboard' element={<Dashboard/>}/>
-      <Route path='Login' element={<Login/>}/>
-      <Route path='Signup' element={<Signup/>}/>
-      <Route path='Result' element={<Result/>}/>
-    </Route>
+    <>
+      {/* Routes with Navbar & Footer */}
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="result" element={<Result />} />
+        <Route path="history" element={<History />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
+
+      {/* Routes without Layout */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+    </>
   )
-)
+);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

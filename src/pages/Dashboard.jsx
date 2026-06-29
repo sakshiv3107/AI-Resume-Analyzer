@@ -1,8 +1,13 @@
 import React from 'react'
+import Hero from '../components/Dashboard/Hero'
+import Feature from '../components/Dashboard/Feature'
 
 function Dashboard() {
   return (
-    <div>Dashboard</div>
+    <>
+      <Hero />
+      <Feature/>
+    </>
   )
 }
 
