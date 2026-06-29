@@ -5,15 +5,16 @@ import App from './App.jsx'
 
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import {Dashboard,Login, Result, Signup,History,Settings} from './pages'
+import {Dashboard,Login, Result,Home, Signup,History,Settings} from './pages'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       {/* Routes with Navbar & Footer */}
       <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
+        <Route index element={<Home />} />
         <Route path="result" element={<Result />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="history" element={<History />} />
         <Route path="settings" element={<Settings />} />
       </Route>

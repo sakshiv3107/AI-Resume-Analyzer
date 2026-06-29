@@ -1,71 +1,118 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from "react";
+import { NavLink } from "react-router-dom";
+
 function Login() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // TODO: Login Logic
+  };
+
   return (
-    
-    <div className="min-h-screen bg-gray-200">
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 py-10" >
-        <h1 className="
-text-4xl
-font-bold
-text-blue-600
-text-center
-">
-ResumeIQ AI
-</h1>
-<p className="
-text-center
-text-gray-600
-mt-3
-">
-Intelligent Precision for Your Career
-</p>
-        <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-lg p-8 mt-8">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-            Email
-          </label>
-          <input placeholder="Email" className=" w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mt-4 mb-2">
-            Password
-          </label>
-          <input placeholder="Password" type="password" className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md mt-6 hover:bg-blue-700 transition duration-200">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-10">
+      <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
+        {/* Logo */}
+        <h1 className="text-4xl font-bold text-center text-blue-600">
+          ResumeIQ AI
+        </h1>
+
+        <p className="text-center text-gray-500 mt-3 mb-8">
+          Intelligent Precision for Your Career
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Email
+            </label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="Enter your email"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <div className="flex justify-between mb-2">
+              <label
+                htmlFor="password"
+                className="text-sm font-semibold text-gray-700"
+              >
+                Password
+              </label>
+
+              <button
+                type="button"
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </div>
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              placeholder="Enter your password"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
+            />
+          </div>
+
+          {/* Login */}
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition"
+          >
             Login
           </button>
+        </form>
 
-          <div className="flex items-center my-6">
+        {/* Divider */}
+        <div className="flex items-center my-8">
+          <hr className="flex-1 border-gray-300" />
 
-          <hr className="flex-1"/>
+          <span className="mx-4 text-sm text-gray-400">OR</span>
 
-          <span className="mx-3 text-gray-400">
-          OR
-          </span>
-
-          <hr className="flex-1"/>
-
-          </div>
-          <div className="border
-border-gray-300
-rounded-lg
-py-3
-hover:bg-gray-100
-transition">
-            <button className="flex items-center justify-center w-full">
-              <img src="/google-icon.svg" alt="Google Icon" className="w-5 h-5 mr-2"/>
-              <span className="text-gray-700">Login with Google</span>
-            </button>
-          </div>
-          <div className="text-center mt-4">
-            <span className="text-gray-600">Don't have an account? </span>
-            <NavLink to="/signup" className="text-blue-600 hover:underline">Sign Up</NavLink>
-          </div>
+          <hr className="flex-1 border-gray-300" />
         </div>
-  
 
+        {/* Google Login */}
+        <button className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition">
+          <img
+            src="/google-icon.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+
+          <span className="font-medium text-gray-700">
+            Continue with Google
+          </span>
+        </button>
+
+        {/* Signup */}
+        <p className="text-center text-gray-600 mt-8">
+          Don't have an account?{" "}
+          <NavLink
+            to="/signup"
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Sign Up
+          </NavLink>
+        </p>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

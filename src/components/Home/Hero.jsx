@@ -15,15 +15,18 @@ function Hero() {
                     <p className="mt-6 text-lg text-gray-600">Optimize your professional identity with high-precision ATS scoring, real-time keyword matching, and AI-driven content enhancement</p>
 
                     <div className="mt-8 flex gap-4">
-                        <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                        <NavLink
+                            to="/Dashboard"
+                            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                            >
                             Get Started
-                        </button>
+                        </NavLink>
                         <NavLink
                             to="/login"
                             className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
                             >
                             Login
-                            </NavLink>
+                        </NavLink>
                     </div>
                 </div>
                 <div className="relative">
