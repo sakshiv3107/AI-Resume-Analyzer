@@ -17,11 +17,11 @@ function Navbar() {
             </NavLink>
 
             <NavLink
-              to="/"
+              to="/Dashboard"
               className={({ isActive }) =>
                 `block py-2 px-3 duration-200 ${
                   isActive
-                    ? "text-blue-500 underline"
+                    ? "text-blue-500 "
                     : "text-gray-700"
                 } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-blue-700 lg:p-0`
               }
@@ -34,7 +34,7 @@ function Navbar() {
               className={({ isActive }) =>
                 `block py-2 px-3 duration-200 ${
                   isActive
-                    ? "text-blue-500 underline"
+                    ? "text-blue-500 "
                     : "text-gray-700"
                 } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-blue-700 lg:p-0`
               }
@@ -47,7 +47,7 @@ function Navbar() {
               className={({ isActive }) =>
                 `block py-2 px-3 duration-200 ${
                   isActive
-                    ? "text-blue-500 underline"
+                    ? "text-blue-500 "
                     : "text-gray-700"
                 } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-blue-700 lg:p-0`
               }
@@ -58,9 +58,12 @@ function Navbar() {
 
           {/* Right Section */}
           <div>
-            <button className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
-              New Analysis
-            </button>
+            <NavLink
+                to="/Dashboard"
+                className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+                >
+                New Analysis
+            </NavLink>
           </div>
 
         </div>
