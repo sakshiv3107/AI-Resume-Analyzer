@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signIn } from "../services/authService";
+import { Eye, EyeOff } from "lucide-react";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -63,7 +65,7 @@ function Login() {
 
           {/* Password */}
           <div>
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between items-center mb-2">
               <label
                 htmlFor="password"
                 className="text-sm font-semibold text-gray-700"
@@ -79,16 +81,26 @@ function Login() {
               </button>
             </div>
 
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e)=> setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "password" : "text"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 pr-12 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-blue-600"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
           {error && (
   <p className="text-red-500 text-sm">{error}</p>

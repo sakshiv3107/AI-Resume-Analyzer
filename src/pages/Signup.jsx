@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signUp } from "../services/authService";
-
+import { Eye, EyeOff } from "lucide-react";
 
 
 
@@ -12,6 +12,8 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -90,18 +92,36 @@ function Signup() {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-semibold mb-2">
-              Password
-            </label>
+            <div className="flex justify-between items-center mb-2">
+              <label
+                htmlFor="password"
+                className="text-sm font-semibold text-gray-700"
+              >
+                Password
+              </label>
 
-            <input
-              type="password"
-              placeholder="Create password"
-              required
-              value={password}
-              onChange={(e)=> setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
-            />
+            </div>
+
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "password" : "text"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create your password"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 pr-12 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-blue-600"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           {/* Confirm Password */}
@@ -110,14 +130,23 @@ function Signup() {
               Confirm Password
             </label>
 
-            <input
-              type="password"
-              placeholder="Confirm password"
-              required
-              value={confirmPassword}
-              onChange={(e)=> setConfirmPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "password" : "text"}
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 pr-12 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-blue-600"
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           {/* Terms */}
