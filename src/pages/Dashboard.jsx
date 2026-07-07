@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import {
   DashboardHero,
   UploadCard,
@@ -9,7 +10,7 @@ import {
 
 function Dashboard() {
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen animate-fadeIn">
       <div className="max-w-7xl mx-auto px-6 py-10">
 
         {/* Hero */}
@@ -26,7 +27,8 @@ function Dashboard() {
 
         {/* Analyze Button */}
         <div className="flex justify-center mt-8">
-          <button
+          <NavLink
+            to="/result"
             className="
             w-full
              bg-linear-to-r
@@ -40,11 +42,12 @@ function Dashboard() {
               hover:scale-[1.02]
               transition-all
               mb-12
+              text-center
             "
 
           >
             ✨ Analyze Resume →
-          </button>
+          </NavLink>
         </div>
 
         {/* Bottom Section */}

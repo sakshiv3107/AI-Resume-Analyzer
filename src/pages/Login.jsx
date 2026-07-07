@@ -9,7 +9,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-10">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-10 animate-fadeIn">
       <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
         {/* Logo */}
         <h1 className="text-4xl font-bold text-center text-blue-600">
