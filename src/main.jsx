@@ -7,6 +7,8 @@ import App from './App.jsx'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import {Dashboard,Login, Result,Home, Signup,History,Settings} from './pages'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -14,13 +16,28 @@ const router = createBrowserRouter(
       {/* Routes with Navbar & Footer */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="result" element={<Result />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="history" element={<History />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="result" element={<Result />} />
+
+        <Route
+          path="history"
+          element={
+            <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
-      {/* Routes without Layout */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
     </>
@@ -29,6 +46,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )

@@ -1,11 +1,29 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { signIn } from "../services/authService";
 
 function Login() {
-  const handleSubmit = (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TODO: Login Logic
+    setLoading(true);
+    setError("");
+
+    const {error} = await signIn(email , password);
+
+    if(error){
+      setError(error.message);
+      setLoading(false);
+      return ;
+    }
+    navigate("/dashboard");
   };
 
   return (
@@ -36,6 +54,8 @@ function Login() {
               name="email"
               type="email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
             />
@@ -64,17 +84,22 @@ function Login() {
               name="password"
               type="password"
               required
+              value={password}
+              onChange={(e)=> setPassword(e.target.value)}
               placeholder="Enter your password"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
             />
           </div>
-
+          {error && (
+  <p className="text-red-500 text-sm">{error}</p>
+)}
           {/* Login */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

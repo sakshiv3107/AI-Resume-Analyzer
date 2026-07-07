@@ -23,7 +23,7 @@ function ResumePreview() {
       <div className="flex-1 border border-gray-200 rounded-2xl bg-gray-50 flex items-center justify-center p-8">
 
         {/* Resume */}
-        <div className="w-72 h-[420px] bg-white rounded-lg shadow-md border border-gray-200 p-5 relative overflow-hidden transition duration-300 hover:scale-105 hover:shadow-xl cursor-pointer">
+        <div className="w-72 h-105 bg-white rounded-lg shadow-md border border-gray-200 p-5 relative overflow-hidden transition duration-300 hover:scale-105 hover:shadow-xl cursor-pointer">
 
           {/* Header */}
           <div className="flex justify-between items-center mb-5">

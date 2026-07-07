@@ -1,7 +1,45 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { signUp } from "../services/authService";
+
+
+
 
 function Signup() {
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    const { error } = await signUp(name, email, password);
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    alert("Account created successfully!");
+
+    navigate("/dashboard");
+
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-10 animate-fadeIn">
       <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
@@ -16,7 +54,7 @@ function Signup() {
         </p>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleSubmit}>
 
           {/* Name */}
           <div>
@@ -26,6 +64,9 @@ function Signup() {
 
             <input
               type="text"
+              value={name}
+              required
+              onChange={(e)=> setName(e.target.value)}
               placeholder="Enter your name"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
@@ -40,6 +81,9 @@ function Signup() {
             <input
               type="email"
               placeholder="Enter your email"
+              required
+              value={email}
+              onChange={(e)=> setEmail(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
@@ -53,6 +97,9 @@ function Signup() {
             <input
               type="password"
               placeholder="Create password"
+              required
+              value={password}
+              onChange={(e)=> setPassword(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
@@ -66,6 +113,9 @@ function Signup() {
             <input
               type="password"
               placeholder="Confirm password"
+              required
+              value={confirmPassword}
+              onChange={(e)=> setConfirmPassword(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
@@ -88,13 +138,18 @@ function Signup() {
               </span>
             </p>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm">{error}</p>
+          )}
 
           {/* Button */}
+
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
-            Create Account
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 
