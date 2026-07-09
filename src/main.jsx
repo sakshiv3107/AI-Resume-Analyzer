@@ -8,6 +8,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import Layout from './Layout.jsx'
 import {Dashboard,Login, Result,Home, Signup,History,Settings} from './pages'
 import { AuthProvider } from './context/AuthContext'
+import { ResumeProvider } from './context/ResumeContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter(
@@ -47,7 +48,9 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ResumeProvider>
+        <RouterProvider router={router} />
+      </ResumeProvider>
     </AuthProvider>
   </StrictMode>,
 )

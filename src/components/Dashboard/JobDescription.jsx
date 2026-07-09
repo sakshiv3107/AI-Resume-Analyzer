@@ -1,7 +1,16 @@
 import React from "react";
 import { BriefcaseBusiness, CircleCheckBig } from "lucide-react";
 
-function JobDescription() {
+function JobDescription({
+  jobDescription,
+  setJobDescription,
+}) {
+  const wordCount = jobDescription
+  .trim()
+  .split(/\s+/)
+  .filter(Boolean).length;
+
+const characterCount = jobDescription.length;
   return (
     <div className="bg-white rounded-3xl border shadow-sm p-8 h-full flex flex-col border-gray-200">
       {/* Heading */}
@@ -39,16 +48,32 @@ function JobDescription() {
           focus:border-blue-500
           placeholder:text-gray-400
         "
+        value={jobDescription}
+        onChange={(e) => setJobDescription(e.target.value)}
       />
 
       {/* Footer */}
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm text-gray-500">
-          Words: <span className="font-medium">0</span> • Characters:
-          <span className="font-medium"> 0</span>
+          Words:
+            <span className="font-medium">
+              {" "}
+              {wordCount}
+            </span>
+
+            •
+
+            Characters:
+            <span className="font-medium">
+              {" "}
+              {characterCount}
+            </span>
         </div>
 
-        <button className="text-blue-600 font-medium hover:underline">
+        <button
+          onClick={() => setJobDescription("")}
+          className="text-blue-600 font-medium hover:underline"
+        >
           Clear
         </button>
       </div>
