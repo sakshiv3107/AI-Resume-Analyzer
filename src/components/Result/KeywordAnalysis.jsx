@@ -5,26 +5,12 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-function KeywordAnalysis() {
-  const matchedSkills = [
-    "React",
-    "JavaScript",
-    "HTML",
-    "CSS",
-    "Tailwind",
-    "Git",
-    "Node.js",
-    "Express",
-  ];
-
-  const missingSkills = [
-    "Docker",
-    "AWS",
-    "Kubernetes",
-    "GraphQL",
-    "MongoDB",
-  ];
-
+function KeywordAnalysis({
+  matchedSkills = [],
+  missingSkills = [],
+  matchPercentage = 0,
+  hasJobDescription = false,
+}) {
   return (
     <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full">
 
@@ -46,20 +32,24 @@ function KeywordAnalysis() {
           </span>
 
           <span className="text-blue-600 font-semibold">
-            38 / 45 Skills
+            {hasJobDescription ? `${matchPercentage}%` : "--"}
           </span>
         </div>
 
         <div className="w-full bg-gray-200 rounded-full h-3">
           <div
-            className="bg-blue-600 h-3 rounded-full"
-            style={{ width: "84%" }}
+            className={`h-3 rounded-full transition-all duration-500 ${
+              hasJobDescription ? "bg-blue-600" : "bg-gray-300"
+            }`}
+            style={{
+              width: hasJobDescription ? `${matchPercentage}%` : "0%",
+            }}
           />
         </div>
 
       </div>
 
-      {/* Matched */}
+      {/* Matched Skills */}
       <div className="mt-8">
 
         <div className="flex items-center gap-2 mb-4">
@@ -69,36 +59,32 @@ function KeywordAnalysis() {
           />
 
           <h3 className="font-semibold text-lg">
-            Matched Skills
+            Matched Skills ({matchedSkills.length})
           </h3>
         </div>
 
         <div className="flex flex-wrap gap-3">
-          {matchedSkills.map((skill) => (
-            <span
-              key={skill}
-              className="px-4
-py-2
-rounded-full
-bg-green-100
-text-green-700
-text-sm
-font-medium
-cursor-pointer
-transition-all
-duration-300
-hover:bg-green-600
-hover:text-white
-hover:-translate-y-1"
-            >
-              {skill}
-            </span>
-          ))}
+
+          {matchedSkills.length > 0 ? (
+            matchedSkills.map((skill, index) => (
+              <span
+                key={index}
+                className="px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium transition-all duration-300 hover:bg-green-600 hover:text-white"
+              >
+                {skill}
+              </span>
+            ))
+          ) : (
+            <p className="text-gray-500">
+              No matched skills detected.
+            </p>
+          )}
+
         </div>
 
       </div>
 
-      {/* Missing */}
+      {/* Missing Skills */}
       <div className="mt-8">
 
         <div className="flex items-center gap-2 mb-4">
@@ -112,35 +98,39 @@ hover:-translate-y-1"
           </h3>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          {missingSkills.map((skill) => (
-            <span
-              key={skill}
-              className="px-4
-py-2
-rounded-full
-bg-red-100
-text-red-600
-text-sm
-font-medium
-cursor-pointer
-transition-all
-duration-300
-hover:bg-red-500
-hover:text-white
-hover:-translate-y-1"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
+        {!hasJobDescription ? (
+          <div className="border border-dashed border-gray-300 rounded-xl bg-gray-50 p-5 text-center">
+            <p className="font-semibold text-gray-700">
+              No Job Description Provided
+            </p>
+
+            <p className="text-sm text-gray-500 mt-2">
+              Add a job description during analysis to compare your resume and identify missing skills.
+            </p>
+          </div>
+        ) : missingSkills.length > 0 ? (
+          <div className="flex flex-wrap gap-3">
+            {missingSkills.map((skill, index) => (
+              <span
+                key={index}
+                className="px-4 py-2 rounded-full bg-red-100 text-red-600 text-sm font-medium transition-all duration-300 hover:bg-red-500 hover:text-white"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-green-600 font-medium">
+            🎉 Great! No important skills are missing.
+          </p>
+        )}
 
       </div>
 
       {/* AI Insight */}
       <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-5 flex gap-4">
 
-        <Lightbulb className="text-blue-600 mt-1" />
+        <Lightbulb className="text-blue-600 mt-1 flex-shrink-0" />
 
         <div>
           <h4 className="font-semibold">
@@ -148,9 +138,13 @@ hover:-translate-y-1"
           </h4>
 
           <p className="text-gray-600 mt-2">
-            Adding the missing skills where relevant to your
-            experience could significantly improve your ATS score.
+            {!hasJobDescription
+              ? "Provide a job description to receive an accurate ATS match score, keyword comparison, and personalized recommendations."
+              : missingSkills.length > 0
+              ? "Adding the missing skills where relevant can improve your ATS score and better align your resume with the job description."
+              : "Excellent! Your resume already contains most of the important skills required for this role."}
           </p>
+
         </div>
 
       </div>

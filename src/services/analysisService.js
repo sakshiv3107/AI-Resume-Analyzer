@@ -57,7 +57,13 @@ The JSON schema MUST be exactly:
   "weaknesses": [],
   "missing_keywords": [],
   "missing_skills": [],
-  "suggestions": [],
+  "suggestions": [
+  {
+    "title": "",
+    "description": "",
+    "priority": ""
+  }
+],
   "detected_skills": [],
   "experience_level": "",
   "recommended_roles": [],
@@ -87,13 +93,36 @@ Rules:
 
 4. Give at least 3 weaknesses.
 
-5. Give at least 5 suggestions.
+5. Return at least 3 suggestions.
+
+  Each suggestion must contain:
+
+  {
+  "title":"",
+  "description":"",
+  "priority":"High | Medium | Low"
+  }
 
 6. Give all important missing keywords.
 
 7. Give all missing technical skills.
 
-8. Detected skills should only include skills found in the resume.
+8. Return:
+
+    matched_skills:
+    Skills present in BOTH the resume and the Job Description.
+
+    If there is no Job Description,
+    matched_skills should equal detected_skills.
+
+    detected_skills:
+    All skills found in the resume.
+
+    missing_skills:
+    Skills required by the Job Description but absent from the resume.
+
+    If there is no Job Description,
+    return an empty array for missing_skills.
 
 9. Recommended roles should be based only on the resume.
 
@@ -181,14 +210,37 @@ or
       },
     },
 
-    suggestions: {
+   suggestions: {
+  type: Type.ARRAY,
+  items: {
+    type: Type.OBJECT,
+    properties: {
+      title: {
+        type: Type.STRING,
+      },
+      description: {
+        type: Type.STRING,
+      },
+      priority: {
+        type: Type.STRING,
+      },
+    },
+    required: [
+      "title",
+      "description",
+      "priority",
+    ],
+  },
+},
+
+    detected_skills: {
       type: Type.ARRAY,
       items: {
         type: Type.STRING,
       },
     },
 
-    detected_skills: {
+    matched_skills: {
       type: Type.ARRAY,
       items: {
         type: Type.STRING,
@@ -251,6 +303,27 @@ or
       },
     },
   },
+  required: [
+  "ats_score",
+  "match_percentage",
+  "summary",
+  "strengths",
+  "weaknesses",
+  "missing_keywords",
+  "missing_skills",
+  "suggestions",
+  "detected_skills",
+  "matched_skills",
+  "experience_level",
+  "recommended_roles",
+  "formatting_score",
+  "grammar_score",
+  "keyword_score",
+  "sections_found",
+  "sections_missing",
+  "red_flags",
+  "ats_breakdown",
+],
 };
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",

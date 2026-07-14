@@ -51,7 +51,12 @@ function Dashboard() {
         jobDescription
       );
 
-      setAnalysis(analysisResult);
+      console.log("FULL RESPONSE", analysisResult);
+console.log("SUGGESTIONS", analysisResult.suggestions);
+
+setAnalysis(analysisResult);
+
+console.log("AFTER SET", analysisResult);
 
       // Guest user
       if (!user) {
@@ -72,7 +77,7 @@ function Dashboard() {
       // TODO:
       // saveResume(uploadResult);
       // saveAnalysis(analysisResult);
-
+console.log("Analysis before navigation:", analysisResult);
       navigate("/result");
     } catch (error) {
       console.error(error);
