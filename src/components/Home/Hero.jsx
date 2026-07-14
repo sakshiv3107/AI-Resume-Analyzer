@@ -1,7 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from "../../context/AuthContext";
 
 function Hero() {
+  const { currentUser } = useAuth();
+
   return (
     <>
         <section className="max-w-8xl mx-auto px-8 py-16 lg:py-16 lg:px-16">
@@ -16,17 +19,19 @@ function Hero() {
 
                     <div className="mt-8 flex gap-4">
                         <NavLink
-                            to="/Dashboard"
+                            to="/dashboard"
                             className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
                             >
                             Get Started
                         </NavLink>
-                        <NavLink
+                        {currentUser && (
+                            <NavLink
                             to="/login"
                             className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
                             >
                             Login
                         </NavLink>
+                        )}
                     </div>
                 </div>
                 <div className="relative">

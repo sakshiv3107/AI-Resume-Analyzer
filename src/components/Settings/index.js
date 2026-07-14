@@ -5,3 +5,4 @@ export { default as NotificationCard } from "./NotificationCard";
 export { default as AppearanceCard } from "./AppearanceCard";
 export { default as SecurityCard } from "./SecurityCard";
 export { default as DangerZone } from "./DangerZone";
+export { default as ConfirmationModal } from "./ConfirmationModal";
