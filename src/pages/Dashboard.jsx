@@ -14,6 +14,7 @@ import { useResume } from "../context/ResumeContext";
 import { extractTextFromPDF } from "../services/pdfService";
 import { analyzeResume } from "../services/analysisService";
 import { uploadResume } from "../services/resumeService";
+import { saveAnalysis } from "../services/historyService";
 
 function Dashboard() {
 
@@ -52,11 +53,11 @@ function Dashboard() {
       );
 
       console.log("FULL RESPONSE", analysisResult);
-console.log("SUGGESTIONS", analysisResult.suggestions);
+      console.log("SUGGESTIONS", analysisResult.suggestions);
 
-setAnalysis(analysisResult);
+      setAnalysis(analysisResult);
 
-console.log("AFTER SET", analysisResult);
+      console.log("AFTER SET", analysisResult);
 
       // Guest user
       if (!user) {
@@ -74,11 +75,21 @@ console.log("AFTER SET", analysisResult);
         throw uploadResult.error;
       }
 
-      // TODO:
-      // saveResume(uploadResult);
-      // saveAnalysis(analysisResult);
-console.log("Analysis before navigation:", analysisResult);
-      navigate("/result");
+      const { data: savedAnalysis, error: analysisError } =
+        await saveAnalysis({
+          resumeId: uploadResult.resumeId,
+          userId: user.id,
+          jobDescription,
+          analysis: analysisResult,
+        });
+      console.log("Saved Analysis:", savedAnalysis);
+      console.log("Analysis Error:", analysisError);  
+
+      if (analysisError) {
+        throw analysisError;
+      }
+      console.log(savedAnalysis.id);
+      navigate(`/result/${savedAnalysis.id}`);
     } catch (error) {
       console.error(error);
       alert(error.message || "Something went wrong.");

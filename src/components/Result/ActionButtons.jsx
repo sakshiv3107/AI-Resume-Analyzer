@@ -1,74 +1,80 @@
 import React from "react";
 import {
   Download,
-  FileText,
   RotateCcw,
   House,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { generateReport } from "../../services/reportService";
 
 function ActionButtons({
+  analysis,
   file,
-  onDownloadReport,
+  fileUrl,
+  jobDescription,
 }) {
-  const resumeUrl = file ? URL.createObjectURL(file) : null;
+  const fileName =
+    file?.name ||
+    fileUrl?.split("/").pop() ||
+    "Resume.pdf";
+
+  const handleDownload = () => {
+    generateReport({
+      analysis,
+      fileName,
+      jobDescription,
+    });
+  };
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 items-center justify-center">
+    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8">
 
-      {/* Heading */}
       <div className="text-center">
         <h2 className="text-2xl font-bold">
           What's Next?
         </h2>
 
         <p className="text-gray-500 mt-2">
-          Download your resume, save your AI report, or analyze another resume.
+          Download your AI report or continue improving your resume.
         </p>
       </div>
 
-      {/* Buttons */}
-      <div className="mt-8 flex flex-wrap justify-center gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
 
-        {/* Download Resume */}
-        {resumeUrl && (
-          <a
-            href={resumeUrl}
-            download={file.name}
-            className="
-            w-80
-    flex items-center justify-center gap-3
-    bg-blue-600
-    hover:bg-blue-700
-    text-white
-    font-semibold
-    py-4
-    rounded-2xl
-    transition-all
-    hover:scale-[1.02]
-            "
-          >
-            <Download size={20} />
-            Resume
-          </a>
-        )}
+        {/* Download Report */}
 
-    
+        <button
+          onClick={handleDownload}
+          className="
+            flex items-center justify-center gap-3
+            bg-blue-600
+            hover:bg-blue-700
+            text-white
+            font-semibold
+            py-4
+            rounded-2xl
+            transition-all
+            hover:scale-[1.02]
+          "
+        >
+          <Download size={20} />
+          Download AI Report
+        </button>
 
         {/* Analyze Again */}
+
         <NavLink
           to="/dashboard"
           className="
-          w-80
-    flex items-center justify-center gap-3
-    bg-blue-600
-    hover:bg-blue-700
-    text-white
-    font-semibold
-    py-4
-    rounded-2xl
-    transition-all
-    hover:scale-[1.02]
+            flex items-center justify-center gap-3
+            bg-gray-100
+            hover:bg-gray-200
+            text-gray-800
+            font-semibold
+            py-4
+            rounded-2xl
+            transition-all
+            hover:scale-[1.02]
           "
         >
           <RotateCcw size={20} />
@@ -76,19 +82,20 @@ function ActionButtons({
         </NavLink>
 
         {/* Dashboard */}
+
         <NavLink
           to="/dashboard"
           className="
-          w-80
-    flex items-center justify-center gap-3
-    bg-blue-600
-    hover:bg-blue-700
-    text-white
-    font-semibold
-    py-4
-    rounded-2xl
-    transition-all
-    hover:scale-[1.02]
+            flex items-center justify-center gap-3
+            border
+            border-gray-300
+            hover:border-blue-500
+            hover:text-blue-600
+            font-semibold
+            py-4
+            rounded-2xl
+            transition-all
+            hover:scale-[1.02]
           "
         >
           <House size={20} />

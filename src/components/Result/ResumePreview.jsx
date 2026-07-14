@@ -4,8 +4,16 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-function ResumePreview({ file }) {
-  const fileUrl = file ? URL.createObjectURL(file) : null;
+function ResumePreview({ file, fileUrl }) {
+  const pdfSrc = file
+  ? URL.createObjectURL(file)
+  : fileUrl;
+
+  const fileName = file?.name || fileUrl?.split("/").pop() || "Resume.pdf";
+
+const fileSize = file
+  ? `${(file.size / 1024).toFixed(0)} KB`
+  : "--";
 
   return (
     <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6  h-full flex flex-col">
@@ -26,7 +34,7 @@ function ResumePreview({ file }) {
 
         {fileUrl ? (
           <iframe
-            src={`${fileUrl}#toolbar=0&navpanes=0&view=FitH`}
+            src={`${pdfSrc}#toolbar=0&navpanes=0&view=FitH`}
             title="Resume Preview"
             className="w-full h-152.5 border-none rounded-2xl"
           />
@@ -39,7 +47,7 @@ function ResumePreview({ file }) {
       </div>
 
       {/* Details */}
-      {file && (
+      {pdfSrc && (
         <div className="grid grid-cols-3 gap-4 mt-8">
 
           <div className="bg-gray-50 rounded-xl p-4 text-center">
@@ -52,14 +60,14 @@ function ResumePreview({ file }) {
           <div className="bg-gray-50 rounded-xl p-4 text-center">
             <p className="text-sm text-gray-500">Name</p>
             <h3 className="font-semibold truncate">
-              {file.name}
+              {fileName}
             </h3>
           </div>
 
           <div className="bg-gray-50 rounded-xl p-4 text-center">
             <p className="text-sm text-gray-500">Size</p>
             <h3 className="font-semibold">
-              {(file.size / 1024).toFixed(0)} KB
+              {fileSize}
             </h3>
           </div>
 
@@ -81,8 +89,8 @@ function ResumePreview({ file }) {
           </a>
 
           <a
-            href={fileUrl}
-            download={file.name}
+            href={pdfSrc}
+            download={fileName}
             className="flex-1 bg-blue-600 text-white rounded-xl py-3 font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition"
           >
             <Download size={18} />

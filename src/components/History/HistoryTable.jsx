@@ -1,27 +1,27 @@
 import React from "react";
 import { Eye, Download } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-function HistoryTable() {
-  const history = [
-    {
-      name: "Frontend_Resume.pdf",
-      score: 92,
-      date: "Today",
-      status: "Excellent",
-    },
-    {
-      name: "Backend_Resume.pdf",
-      score: 85,
-      date: "Yesterday",
-      status: "Good",
-    },
-    {
-      name: "Data_Analyst.pdf",
-      score: 71,
-      date: "10 Jul 2026",
-      status: "Average",
-    },
-  ];
+function HistoryTable({ history = [] }) {
+  const navigate = useNavigate();
+  const getStatus = (score) => {
+    if (score >= 90)
+      return {
+        label: "Excellent",
+        color: "bg-green-100 text-green-700",
+      };
+
+    if (score >= 80)
+      return {
+        label: "Good",
+        color: "bg-blue-100 text-blue-700",
+      };
+
+    return {
+      label: "Needs Improvement",
+      color: "bg-yellow-100 text-yellow-700",
+    };
+  };
 
   return (
     <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
@@ -50,61 +50,69 @@ function HistoryTable() {
 
         <tbody>
 
-          {history.map((item, index) => (
+          {history.map((item) => {
+            const status = getStatus(item.ats_score);
 
-            <tr
-              key={index}
-              className="border-t hover:bg-gray-50 transition"
-            >
+            return (
+              <tr
+                key={item.id}
+                className="border-t hover:bg-gray-50 transition"
+              >
 
-              <td className="px-6 py-5 font-medium">
-                {item.name}
-              </td>
+                {/* Resume */}
+                <td className="px-6 py-5 font-medium">
+                  {item.resumes?.file_name}
+                </td>
 
-              <td className="px-6 py-5 font-semibold text-blue-600">
-                {item.score}
-              </td>
+                {/* ATS */}
+                <td className="px-6 py-5 font-semibold text-blue-600">
+                  {item.ats_score}%
+                </td>
 
-              <td className="px-6 py-5 text-gray-500">
-                {item.date}
-              </td>
+                {/* Date */}
+                <td className="px-6 py-5 text-gray-500">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </td>
 
-              <td className="px-6 py-5">
+                {/* Status */}
+                <td className="px-6 py-5">
 
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium
-                  ${
-                    item.score >= 90
-                      ? "bg-green-100 text-green-700"
-                      : item.score >= 80
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {item.status}
-                </span>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${status.color}`}
+                  >
+                    {status.label}
+                  </span>
 
-              </td>
+                </td>
 
-              <td className="px-6 py-5">
+                {/* Actions */}
+                <td className="px-6 py-5">
 
-                <div className="flex justify-center gap-3">
+                  <div className="flex justify-center gap-3">
 
-                  <button className="p-2 rounded-lg border hover:bg-gray-100">
-                    <Eye size={18} />
-                  </button>
+                    {/* View Resume */}
+                    <button
+                      onClick={() => navigate(`/result/${item.id}`)}
+                      className="p-2 rounded-lg border hover:bg-gray-100"
+                    >
+                      <Eye size={18} />
+                    </button>
+                    {/* Download Resume */}
+                    <a
+                      href={item.resumes?.file_url}
+                      download
+                      className="p-2 rounded-lg border hover:bg-gray-100"
+                    >
+                      <Download size={18} />
+                    </a>
 
-                  <button className="p-2 rounded-lg border hover:bg-gray-100">
-                    <Download size={18} />
-                  </button>
+                  </div>
 
-                </div>
+                </td>
 
-              </td>
-
-            </tr>
-
-          ))}
+              </tr>
+            );
+          })}
 
         </tbody>
 

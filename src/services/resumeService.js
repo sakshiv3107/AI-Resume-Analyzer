@@ -2,30 +2,42 @@ import { supabase } from "../supabase";
 
 export const uploadResume = async (file, userId) => {
   const fileExt = file.name.split(".").pop();
-  const fileName = `${userId}/${Date.now()}.${fileExt}`;
+  const filePath = `${userId}/${Date.now()}.${fileExt}`;
 
-  console.log("Uploading:", fileName);
-
-  const { data, error } = await supabase.storage
+  // Upload to Storage
+  const { error: uploadError } = await supabase.storage
     .from("resumes")
-    .upload(fileName, file);
+    .upload(filePath, file);
 
-  console.log("Upload Data:", data);
-  console.log("Upload Error:", error);
-
-  if (error) {
-    return { error };
+  if (uploadError) {
+    return { error: uploadError };
   }
 
-  const { data: urlData } = supabase.storage
+  // Get Public URL
+  const {
+    data: { publicUrl },
+  } = supabase.storage
     .from("resumes")
-    .getPublicUrl(fileName);
+    .getPublicUrl(filePath);
 
-  console.log("Public URL:", urlData);
+  // Save metadata in resumes table
+  const { data: resume, error: dbError } = await supabase
+    .from("resumes")
+    .insert({
+      user_id: userId,
+      file_name: file.name,
+      file_url: publicUrl,
+    })
+    .select()
+    .single();
+
+  if (dbError) {
+    return { error: dbError };
+  }
 
   return {
+    resumeId: resume.id,
     fileName: file.name,
-    filePath: fileName,
-    fileUrl: urlData.publicUrl,
+    fileUrl: publicUrl,
   };
 };
