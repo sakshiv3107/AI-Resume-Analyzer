@@ -1,60 +1,46 @@
 import React from "react";
-import { FileText, BriefcaseBusiness, Clock3 } from "lucide-react";
+import { BriefcaseBusiness, Clock3 } from "lucide-react";
 
-function ResultHero() {
+function ResultHero({ fileName = "Resume.pdf", jobTitle = "Target Role", createdAt }) {
+  const timeAgo = (dateString) => {
+    if (!dateString) return "Just now";
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.round((now - date) / 1000);
+    const minutes = Math.round(seconds / 60);
+    const hours = Math.round(minutes / 60);
+    const days = Math.round(hours / 24);
+
+    if (seconds < 60) return "Just now";
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  };
+
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:p-8 h-full flex flex-col justify-center">
+      <p className="text-blue-600 uppercase tracking-[0.2em] text-xs font-semibold">
+        RESUME ANALYSIS
+      </p>
 
-        {/* Left */}
-        <div>
-          <p className="text-blue-600 uppercase tracking-[0.3em] text-xs font-semibold">
-            Resume Analysis
-          </p>
+      <h1 className="text-2xl md:text-3xl font-bold mt-2 text-gray-900 font-serif tracking-tight truncate" title={fileName}>
+        {fileName}
+      </h1>
 
-          <h1 className="text-4xl font-bold mt-3 text-gray-900">
-            Software_Engineer_Resume.pdf
-          </h1>
+      <p className="text-gray-500 mt-2 text-sm max-w-lg leading-relaxed">
+        Your resume has been successfully analyzed and compared against the selected <span className="font-semibold text-blue-600">{jobTitle}</span> job description.
+      </p>
 
-          <p className="text-gray-500 mt-3 max-w-xl">
-            Your resume has been successfully analyzed and compared
-            against the selected job description.
-          </p>
-
-          <div className="flex flex-wrap gap-6 mt-6 text-gray-600 text-sm">
-
-            <div className="flex items-center gap-2">
-              <BriefcaseBusiness size={18} className="text-blue-600" />
-              Frontend Developer
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Clock3 size={18} className="text-blue-600" />
-              Analyzed 2 minutes ago
-            </div>
-
-          </div>
+      <div className="flex flex-wrap gap-6 mt-6 pt-5 border-t border-gray-100 text-gray-500 text-xs font-medium">
+        <div className="flex items-center gap-1.5">
+          <BriefcaseBusiness size={14} className="text-gray-400" />
+          {jobTitle}
         </div>
 
-        {/* Right */}
-        <div className="flex items-center gap-4 bg-green-50 border border-green-200 rounded-2xl px-6 py-4">
-
-          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
-            <FileText className="text-green-600" size={28} />
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">
-              Status
-            </p>
-
-            <h3 className="font-semibold text-green-600">
-              Analysis Completed
-            </h3>
-          </div>
-
+        <div className="flex items-center gap-1.5">
+          <Clock3 size={14} className="text-gray-400" />
+          Analyzed {timeAgo(createdAt)}
         </div>
-
       </div>
     </div>
   );

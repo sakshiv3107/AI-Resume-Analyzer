@@ -1,101 +1,52 @@
 import React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
-function ATSScoreCard({
-  atsScore,
-  matchPercentage,
-}) {
+function ATSScoreCard({ atsScore, matchPercentage }) {
   let badge = "";
-  let badgeColor = "";
-  let description = "";
+  let badgeBg = "";
+  let badgeText = "";
 
   if (atsScore >= 85) {
     badge = "Excellent Match";
-    badgeColor = "bg-green-100 text-green-700";
-    description =
-      "Your resume is highly compatible with the provided job description.";
+    badgeBg = "bg-green-100";
+    badgeText = "text-green-700";
   } else if (atsScore >= 70) {
     badge = "Good Match";
-    badgeColor = "bg-yellow-100 text-yellow-700";
-    description =
-      "Your resume has a good match but can be improved further.";
+    badgeBg = "bg-blue-50";
+    badgeText = "text-blue-600";
   } else {
     badge = "Needs Improvement";
-    badgeColor = "bg-red-100 text-red-700";
-    description =
-      "Your resume needs improvements to better match the job description.";
+    badgeBg = "bg-red-50";
+    badgeText = "text-red-700";
   }
 
-  return (
-    <div className="w-full">
-      <h2 className="text-2xl font-bold text-center">
-        ATS Score
-      </h2>
+  // To perfectly match the mockup's blue ring
+  const strokeColor = "#3B82F6"; // Tailwind blue-500
 
-      <div className="w-48 h-48 mx-auto my-8">
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 h-full flex flex-col items-center justify-center">
+      <div className="w-36 h-36">
         <CircularProgressbar
           value={atsScore}
           text={`${atsScore}%`}
+          strokeWidth={8}
           styles={buildStyles({
-            textSize: "18px",
-            pathColor: "#2563EB",
-            trailColor: "#E5E7EB",
-            textColor: "#111827",
+            textSize: "24px",
+            pathColor: strokeColor,
+            trailColor: "#F3F4F6", // gray-100
+            textColor: "#1D4ED8", // blue-700
+            pathTransitionDuration: 1.5,
           })}
         />
       </div>
-
-      <div className="text-center">
-        <span
-          className={`px-3 py-2 rounded-full text-sm font-semibold ${badgeColor}`}
-        >
-          {badge}
-        </span>
-
-        <p className="mt-5 text-gray-600">
-          {description}
-        </p>
-      </div>
-
-      <div className="border-t mt-8 pt-6 space-y-4">
-        <div className="flex justify-between">
-          <span className="text-gray-600">
-            Match Percentage
-          </span>
-
-          <span className="font-semibold text-blue-600">
-            {matchPercentage}%
-          </span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">
-            ATS Score
-          </span>
-
-          <span className="font-semibold text-green-600">
-            {atsScore}%
-          </span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">
-            Overall Status
-          </span>
-
-          <span
-            className={`font-semibold ${
-              atsScore >= 85
-                ? "text-green-600"
-                : atsScore >= 70
-                ? "text-yellow-600"
-                : "text-red-600"
-            }`}
-          >
-            {badge}
-          </span>
-        </div>
-      </div>
+      
+      <h2 className="text-xl font-bold text-gray-900 mt-6 font-serif">
+        ATS Score
+      </h2>
+      
+      <span className={`mt-2 inline-block px-4 py-1 rounded-full text-xs font-semibold ${badgeBg} ${badgeText}`}>
+        {badge}
+      </span>
     </div>
   );
 }

@@ -1,105 +1,55 @@
 import React from "react";
-import {
-  Download,
-  ExternalLink,
-} from "lucide-react";
+import { Download, ExternalLink, FileText } from "lucide-react";
 
 function ResumePreview({ file, fileUrl }) {
-  const pdfSrc = file
-  ? URL.createObjectURL(file)
-  : fileUrl;
-
+  const pdfSrc = file ? URL.createObjectURL(file) : fileUrl;
   const fileName = file?.name || fileUrl?.split("/").pop() || "Resume.pdf";
-
-const fileSize = file
-  ? `${(file.size / 1024).toFixed(0)} KB`
-  : "--";
+  const fileSize = file ? `${(file.size / 1024).toFixed(0)} KB` : "PDF";
 
   return (
-    <div className="h-full flex flex-col">
-
-      {/* Heading */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold">
-          Resume Preview
-        </h2>
-
-        <p className="text-gray-500 mt-2">
-          Review your uploaded resume.
-        </p>
-      </div>
-
-      {/* Preview */}
-      <div className="flex-1 border border-gray-200 rounded-2xl overflow-auto">
-
-        {fileUrl ? (
-          <iframe
-            src={`${pdfSrc}#toolbar=0&navpanes=0&view=FitH`}
-            title="Resume Preview"
-            className="w-full h-152.5 border-none rounded-2xl"
-          />
-        ) : (
-          <div className="h-162.5 flex items-center justify-center text-gray-500">
-            No resume uploaded.
+    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+      <h2 className="text-sm font-bold text-gray-800 mb-3">Uploaded Resume</h2>
+      
+      {pdfSrc ? (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl p-3">
+            <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center shrink-0">
+              <FileText className="text-blue-600" size={20} />
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-xs font-semibold text-gray-900 truncate" title={fileName}>
+                {fileName}
+              </p>
+              <p className="text-[10px] text-gray-400 mt-0.5">{fileSize}</p>
+            </div>
           </div>
-        )}
-
-      </div>
-
-      {/* Details */}
-      {pdfSrc && (
-        <div className="grid grid-cols-3 gap-4 mt-8">
-
-          <div className="bg-gray-50 rounded-xl p-4 text-center">
-            <p className="text-sm text-gray-500">Type</p>
-            <h3 className="font-semibold">
-              PDF
-            </h3>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href={pdfSrc}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-1.5 bg-blue-50 text-blue-700 rounded-lg py-2 text-xs font-semibold hover:bg-blue-100 transition"
+            >
+              <ExternalLink size={14} />
+              Open Full
+            </a>
+            <a
+              href={pdfSrc}
+              download={fileName}
+              className="flex items-center justify-center gap-1.5 bg-gray-50 text-gray-700 border border-gray-200 rounded-lg py-2 text-xs font-semibold hover:bg-gray-100 transition"
+            >
+              <Download size={14} />
+              Download
+            </a>
           </div>
-
-          <div className="bg-gray-50 rounded-xl p-4 text-center">
-            <p className="text-sm text-gray-500">Name</p>
-            <h3 className="font-semibold truncate">
-              {fileName}
-            </h3>
-          </div>
-
-          <div className="bg-gray-50 rounded-xl p-4 text-center">
-            <p className="text-sm text-gray-500">Size</p>
-            <h3 className="font-semibold">
-              {fileSize}
-            </h3>
-          </div>
-
+        </div>
+      ) : (
+        <div className="py-6 flex flex-col items-center justify-center text-gray-400">
+          <FileText size={32} className="mb-2 opacity-50" />
+          <p className="text-xs">No resume uploaded.</p>
         </div>
       )}
-
-      {/* Buttons */}
-      {fileUrl && (
-        <div className="flex gap-4 mt-8">
-
-          <a
-            href={fileUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="flex-1 border border-gray-300 rounded-xl py-3 font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-          >
-            <ExternalLink size={18} />
-            Open
-          </a>
-
-          <a
-            href={pdfSrc}
-            download={fileName}
-            className="flex-1 bg-blue-600 text-white rounded-xl py-3 font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition"
-          >
-            <Download size={18} />
-            Download
-          </a>
-
-        </div>
-      )}
-
     </div>
   );
 }

@@ -3,24 +3,12 @@ import { Sparkles } from "lucide-react";
 
 function AISummary({ summary }) {
   return (
-    <div>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
-          <Sparkles className="text-blue-600" size={22} />
-        </div>
-
-        <div>
-          <h2 className="text-xl font-bold">
-            AI Summary
-          </h2>
-
-          <p className="text-sm text-gray-500">
-            Quick overview
-          </p>
-        </div>
+    <div className="bg-white rounded-2xl border border-gray-200 p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <Sparkles className="text-blue-500" size={15} />
+        <h2 className="text-sm font-bold text-gray-800">AI Summary</h2>
       </div>
-
-      <p className="text-gray-600 leading-7">
+      <p className="text-gray-600 text-xs leading-relaxed">
         {summary}
       </p>
     </div>
