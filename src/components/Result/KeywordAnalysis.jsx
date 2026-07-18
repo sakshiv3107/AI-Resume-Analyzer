@@ -12,7 +12,7 @@ function KeywordAnalysis({
   hasJobDescription = false,
 }) {
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full">
+    <div className="h-full">
 
       {/* Heading */}
       <h2 className="text-2xl font-bold">

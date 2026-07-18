@@ -98,54 +98,54 @@ function Dashboard() {
     }
   };
   return (
-    <div className="bg-gray-50 min-h-screen animate-fadeIn">
-      <div className="max-w-7xl mx-auto px-6 py-10">
+    <div className="bg-gray-50/50 min-h-screen animate-fadeIn">
+      <div className="max-w-6xl mx-auto px-6 py-8">
 
-        {/* Hero */}
+        {/* Header */}
         <DashboardHero />
 
-        {/* Upload + Job Description */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        {/* Summary Strip */}
+        <StatsCard />
 
-          <UploadCard selectedFile={selectedFile}
-            setSelectedFile={setSelectedFile}/>
+        {/* New Analysis Card */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm mb-10 overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
+            <UploadCard 
+              selectedFile={selectedFile}
+              setSelectedFile={setSelectedFile}
+            />
 
-          <JobDescription jobDescription={jobDescription}
-    setJobDescription={setJobDescription} />
+            <JobDescription 
+              jobDescription={jobDescription}
+              setJobDescription={setJobDescription} 
+            />
+          </div>
 
+          <div className="bg-gray-50 border-t border-gray-200 p-6 flex justify-end">
+            <button
+              onClick={handleAnalyze}
+              disabled={loading}
+              className="
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                rounded-xl
+                px-8
+                py-3
+                font-semibold
+                shadow-sm
+                transition-all
+                disabled:opacity-50
+              "
+            >
+              {loading ? "Analyzing..." : "✨ Analyze Resume"}
+            </button>
+          </div>
         </div>
 
-        {/* Analyze Button */}
-        <div className="flex justify-center mt-8">
-          <button
-            onClick={handleAnalyze}
-            disabled={loading}
-            className="
-              w-full
-              bg-linear-to-r
-              from-blue-600
-              to-blue-500
-              text-white
-              rounded-2xl
-              py-4
-              font-semibold
-              shadow-lg
-              hover:scale-[1.02]
-              transition-all
-              mb-12
-              disabled:opacity-50
-            "
-          >
-            {loading ? "Analyzing..." : "✨ Analyze Resume →"}
-          </button>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-
-            <StatsCard />
-            <RecentAnalysis />
-
+        {/* History Section */}
+        <div>
+          <RecentAnalysis />
         </div>
 
       </div>

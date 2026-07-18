@@ -7,7 +7,7 @@ import {
 function AISuggestions({ suggestions = [] }) {
   console.log("AISuggestions:", suggestions);
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full">
+    <div className="h-full">
 
       {/* Heading */}
       <h2 className="text-2xl font-bold">

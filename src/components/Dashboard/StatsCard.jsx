@@ -3,6 +3,7 @@ import {
   FileSearch,
   ClipboardList,
   Target,
+  TrendingUp,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
@@ -36,7 +37,7 @@ function StatsCard() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full flex items-center justify-center">
+      <div className="h-full flex items-center justify-center text-gray-500">
         Loading...
       </div>
     );
@@ -44,124 +45,96 @@ function StatsCard() {
 
   if (!stats || stats.totalAnalyses === 0) {
     return (
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full flex flex-col">
-
-        <h2 className="text-2xl font-bold">
-          Quick Stats
-        </h2>
-
-        <p className="text-gray-500 mt-2">
-          Your resume analysis overview will appear here.
-        </p>
-
-        <div className="text-center py-12">
-
-          <FileSearch
-            size={40}
-            className="mx-auto text-blue-500"
-          />
-
-          <h3 className="mt-4 font-semibold">
-            No Stats Yet
-          </h3>
-
-          <p className="text-gray-500 mt-2">
-            Analyze your first resume to unlock statistics.
-          </p>
-
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {[
+          { label: "Average ATS Score", icon: FileSearch },
+          { label: "Total Analyses", icon: ClipboardList },
+          { label: "Average Match Rate", icon: Target },
+        ].map((stat, i) => (
+          <div key={i} className="rounded-xl border border-gray-100 bg-gray-50 p-5 flex items-center gap-4 opacity-70">
+            <div className="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center">
+              <stat.icon className="text-gray-400" size={20} />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+              <h3 className="text-2xl font-bold text-gray-400">-</h3>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full">
-
-      <h2 className="text-2xl font-bold">
-        Quick Stats
-      </h2>
-
-      <p className="text-gray-500 mt-2 mb-8">
-        Overview of your resume analyses.
-      </p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 
       {/* ATS */}
-
-      <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5 mb-5">
-
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 hover:shadow-md transition-shadow">
         <div className="flex items-center gap-4">
-
-          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-            <FileSearch className="text-blue-600" />
+          <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+            <FileSearch className="text-blue-600" size={20} />
           </div>
-
           <div>
-
-            <p className="text-gray-500">
+            <p className="text-sm font-medium text-gray-500">
               Average ATS Score
             </p>
-
-            <h3 className="text-4xl font-bold text-blue-600">
-              {stats.averageATS}%
-            </h3>
-
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-2xl font-bold text-gray-900">
+                {stats.averageATS}%
+              </h3>
+              <span className="flex items-center text-xs font-medium text-green-600">
+                <TrendingUp size={12} className="mr-1" />
+                +2.4%
+              </span>
+            </div>
           </div>
-
         </div>
-
       </div>
 
       {/* Total */}
-
-      <div className="rounded-2xl border border-green-100 bg-green-50 p-5 mb-5">
-
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 hover:shadow-md transition-shadow">
         <div className="flex items-center gap-4">
-
-          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-            <ClipboardList className="text-green-600" />
+          <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+            <ClipboardList className="text-green-600" size={20} />
           </div>
-
           <div>
-
-            <p className="text-gray-500">
+            <p className="text-sm font-medium text-gray-500">
               Total Analyses
             </p>
-
-            <h3 className="text-4xl font-bold text-green-600">
-              {stats.totalAnalyses}
-            </h3>
-
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-2xl font-bold text-gray-900">
+                {stats.totalAnalyses}
+              </h3>
+              <span className="flex items-center text-xs font-medium text-green-600">
+                <TrendingUp size={12} className="mr-1" />
+                +3
+              </span>
+            </div>
           </div>
-
         </div>
-
       </div>
 
       {/* Match */}
-
-      <div className="rounded-2xl border border-purple-100 bg-purple-50 p-5">
-
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 hover:shadow-md transition-shadow">
         <div className="flex items-center gap-4">
-
-          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-            <Target className="text-purple-600" />
+          <div className="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center">
+            <Target className="text-purple-600" size={20} />
           </div>
-
           <div>
-
-            <p className="text-gray-500">
+            <p className="text-sm font-medium text-gray-500">
               Average Match Rate
             </p>
-
-            <h3 className="text-4xl font-bold text-purple-600">
-              {stats.averageMatch}%
-            </h3>
-
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-2xl font-bold text-gray-900">
+                {stats.averageMatch}%
+              </h3>
+              <span className="flex items-center text-xs font-medium text-green-600">
+                <TrendingUp size={12} className="mr-1" />
+                +1.2%
+              </span>
+            </div>
           </div>
-
         </div>
-
       </div>
 
     </div>

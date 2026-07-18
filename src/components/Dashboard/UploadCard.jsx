@@ -30,57 +30,18 @@ function UploadCard({selectedFile,setSelectedFile}) {
     setError("");
     setSelectedFile(file);
   };
-  if(selectedFile){
-    return (
-      <div className="border-2 border-green-200 rounded-2xl p-6 bg-green-50">
 
-      <div className="flex items-center justify-between">
-
-        <div className="flex gap-4 items-center">
-
-          <div className="w-14 h-14 rounded-xl bg-red-100 flex items-center justify-center">
-            <FileText className="text-red-500" />
-          </div>
-
-          <div>
-            <h3 className="font-semibold">
-              {selectedFile.name}
-            </h3>
-
-            <p className="text-sm text-gray-500">
-              {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-            </p>
-
-            <span className="text-green-600 text-sm font-medium">
-              ✓ Ready for Analysis
-            </span>
-          </div>
-
-        </div>
-
-        <button
-          onClick={() => setSelectedFile(null)}
-          className="text-red-500 hover:text-red-700"
-        >
-          <X />
-        </button>
-
-      </div>
-
-
-    </div>
-    )
-  }
   return (
-    <div className="bg-white rounded-3xl  shadow-sm p-8 h-full flex flex-col border-gray-200">
+    <div className="p-6 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm">
       {/* Heading */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
+      <div className="mb-4">
+        <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <FileText size={20} className="text-blue-600" />
           Upload Resume
         </h2>
 
-        <p className="text-gray-500 mt-2">
-          Upload your resume in PDF or DOCX format to begin the AI analysis.
+        <p className="text-sm text-gray-500 mt-1">
+          PDF or DOCX (Max 5MB)
         </p>
       </div>
 
@@ -93,83 +54,69 @@ function UploadCard({selectedFile,setSelectedFile}) {
       />
 
       {/* Upload Area */}
-      <div
-        className="
-          border-2
-          border-dashed
-          border-blue-300
-          rounded-2xl
-          p-8
-          flex
-          flex-col
-          items-center
-          justify-center
-          text-center
-          hover:border-blue-600
-          hover:bg-blue-50/40
-          transition-all
-          duration-300
-          cursor-pointer
-        "
-      >
-        <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-6">
-          <UploadCloud
-            size={40}
-            className="text-blue-600"
-          />
-        </div>
-
-        <h3 className="text-2xl font-semibold text-gray-900">
-          Drag & Drop Resume
-        </h3>
-
-        <p className="text-gray-500 mt-3">
-          PDF or DOCX (Maximum 5 MB)
-        </p>
-
+      {!selectedFile ? (
         <label
           htmlFor="resume-upload"
           className="
-            mt-8
-            bg-blue-600
-            hover:bg-blue-700
-            text-white
-            px-6
-            py-3
+            border-2
+            border-dashed
+            border-blue-300
             rounded-xl
-            font-semibold
-            transition
+            p-6
+            flex
+            flex-col
+            items-center
+            justify-center
+            text-center
+            hover:border-blue-600
+            hover:bg-blue-50/40
+            transition-all
+            duration-300
             cursor-pointer
+            flex-1
           "
         >
-          Browse Files
-        </label>
-      </div>
-
-      {/* Supported Formats */}
-      <div className="flex items-center gap-4 mt-6 text-sm text-gray-500">
-        <FileText className="text-blue-600" size={18} />
-
-        <span>
-          Supported formats: PDF, DOC, DOCX
-        </span>
-      </div>
-
-      {selectedFile && (
-        <div className="mt-6 flex items-center justify-between rounded-xl border border-gray-200 p-4 bg-gray-50">
-          <div>
-            <p className="font-medium">{selectedFile.name}</p>
-            <p className="text-sm text-gray-500">
-              {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-            </p>
+          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+            <UploadCloud
+              size={24}
+              className="text-blue-600"
+            />
           </div>
 
-          <button
-            onClick={() => setSelectedFile(null)}
-            className="text-red-500"
-          >
-            <X />
-          </button>
+          <h3 className="text-sm font-semibold text-gray-900">
+            Click to Browse
+          </h3>
+
+          <p className="text-xs text-gray-500 mt-1">
+            or drag and drop your file here
+          </p>
+        </label>
+      ) : (
+        <div className="border border-green-200 rounded-xl p-6 bg-green-50 flex flex-col justify-center flex-1">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-4 items-center">
+              <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
+                <FileText className="text-red-500" size={24} />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm text-gray-900">
+                  {selectedFile.name}
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+                <span className="text-green-600 text-xs font-medium flex items-center gap-1 mt-1">
+                  ✓ Ready for Analysis
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => setSelectedFile(null)}
+              className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-red-500 shadow-sm border border-gray-200 transition"
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
       )}
 

@@ -12,27 +12,18 @@ function JobDescription({
 
 const characterCount = jobDescription.length;
   return (
-    <div className="bg-white rounded-3xl border shadow-sm p-8 h-full flex flex-col border-gray-200">
+    <div className="p-6 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm">
       {/* Heading */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-          <BriefcaseBusiness className="text-blue-600" size={22} />
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Job Description
-          </h2>
-
-          <p className="text-gray-500 mt-1">
-            Paste the target job description to compare it with your resume.
-          </p>
-        </div>
+      <div className="flex items-center gap-2 mb-4">
+        <BriefcaseBusiness className="text-blue-600" size={20} />
+        <h2 className="text-lg font-bold text-gray-900">
+          Job Description
+        </h2>
       </div>
 
       {/* Textarea */}
       <textarea
-        rows={7}
+        rows={5}
         placeholder="Paste the complete job description here..."
         className="
           w-full
@@ -79,39 +70,19 @@ const characterCount = jobDescription.length;
       </div>
 
       {/* Tips */}
-      <div className="mt-8 rounded-2xl bg-blue-50 border border-blue-100 p-5">
-        <h3 className="font-semibold text-gray-900 mb-4">
+      <div className="mt-4 rounded-xl bg-blue-50/50 border border-blue-100 p-4">
+        <h3 className="text-sm font-semibold text-gray-900 mb-2">
           For Better Results
         </h3>
 
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
+        <div className="space-y-2">
+          <div className="flex items-start gap-2">
             <CircleCheckBig
-              className="text-green-600"
-              size={18}
+              className="text-green-600 shrink-0 mt-0.5"
+              size={14}
             />
-            <p className="text-gray-600 text-sm">
-              Include the complete job responsibilities.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <CircleCheckBig
-              className="text-green-600"
-              size={18}
-            />
-            <p className="text-gray-600 text-sm">
-              Include required technical skills.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <CircleCheckBig
-              className="text-green-600"
-              size={18}
-            />
-            <p className="text-gray-600 text-sm">
-              Include qualifications and experience requirements.
+            <p className="text-gray-600 text-xs">
+              Include responsibilities, technical skills, and qualifications.
             </p>
           </div>
         </div>

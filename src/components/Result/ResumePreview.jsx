@@ -16,7 +16,7 @@ const fileSize = file
   : "--";
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6  h-full flex flex-col">
+    <div className="h-full flex flex-col">
 
       {/* Heading */}
       <div className="mb-6">

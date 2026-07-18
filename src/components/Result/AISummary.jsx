@@ -3,7 +3,7 @@ import { Sparkles } from "lucide-react";
 
 function AISummary({ summary }) {
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6">
+    <div>
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
           <Sparkles className="text-blue-600" size={22} />

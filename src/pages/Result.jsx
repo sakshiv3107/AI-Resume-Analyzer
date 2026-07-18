@@ -77,7 +77,7 @@ function Result() {
 }
 
   return (
-    <div className="bg-gray-50 min-h-screen animate-fadeIn">
+    <div className="bg-white min-h-screen animate-fadeIn">
       <div className="max-w-7xl mx-auto px-6 py-10">
 
         <ResultHero />

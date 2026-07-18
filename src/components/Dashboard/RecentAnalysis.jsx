@@ -53,9 +53,15 @@ function RecentAnalysis() {
     loadRecentAnalyses();
   };
 
+  const getScoreColor = (score) => {
+    if (score >= 80) return "bg-green-100 text-green-700 border-green-200";
+    if (score >= 60) return "bg-blue-100 text-blue-700 border-blue-200";
+    return "bg-red-100 text-red-700 border-red-200";
+  };
+
   if (loading) {
     return (
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full flex items-center justify-center">
+      <div className="h-full flex items-center justify-center text-gray-500">
         Loading...
       </div>
     );
@@ -63,7 +69,7 @@ function RecentAnalysis() {
 
   if (!analyses.length) {
     return (
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full">
+      <div className="h-full">
 
         <div className="flex items-center gap-3 mb-8">
 
@@ -105,17 +111,17 @@ function RecentAnalysis() {
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 h-full">
+    <div className="h-full">
 
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-end mb-4">
 
         <div>
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-lg font-bold text-gray-900">
             Recent Analysis
           </h2>
 
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 text-sm mt-1">
             Your latest AI resume analyses.
           </p>
 
@@ -123,73 +129,62 @@ function RecentAnalysis() {
 
         <button
           onClick={() => navigate("/history")}
-          className="flex items-center gap-2 text-blue-600 font-medium hover:underline"
+          className="flex items-center gap-1 text-sm text-blue-600 font-medium hover:underline"
         >
           View All
-          <ArrowRight size={18} />
+          <ArrowRight size={16} />
         </button>
 
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
 
         {analyses.map((item) => (
 
           <div
             key={item.id}
-            className="border border-gray-200 rounded-2xl p-5 hover:shadow-md transition"
+            className="border border-gray-200 bg-white p-4 rounded-xl hover:shadow-md transition flex justify-between items-center"
           >
 
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col">
+              <h3 className="font-semibold text-gray-900 text-sm">
+                {item.resumes.file_name}
+              </h3>
 
-              <div>
+              <p className="text-gray-500 text-xs mt-1">
+                {new Date(item.created_at).toLocaleDateString()}
+              </p>
+            </div>
 
-                <h3 className="font-semibold text-lg">
-                  {item.resumes.file_name}
-                </h3>
+            <div className="flex items-center gap-4">
 
-                <p className="text-gray-500 text-sm mt-1">
-                  {new Date(item.created_at).toLocaleDateString()}
-                </p>
-
+              <div className={`px-3 py-1 rounded-full border text-sm font-bold ${getScoreColor(item.ats_score)}`}>
+                {item.ats_score}%
               </div>
 
-              <div className="flex items-center gap-6">
-
-                <div className="text-center">
-
-                  <p className="text-xs text-gray-500">
-                    ATS Score
-                  </p>
-
-                  <h3 className="text-2xl font-bold text-blue-600">
-                    {item.ats_score}%
-                  </h3>
-
-                </div>
-
+              <div className="flex items-center gap-2 border-l border-gray-200 pl-4">
                 <button
                   onClick={() => {
-                    console.log("Navigating to:", `/result/${item.id}`);
                     navigate(`/result/${item.id}`);
                   }}
-                  className="w-10 h-10 rounded-xl bg-blue-50 hover:bg-blue-100 flex items-center justify-center"
+                  className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-blue-50 flex items-center justify-center transition"
+                  title="View"
                 >
-                  <Eye size={18} className="text-blue-600" />
+                  <Eye size={16} className="text-gray-500 hover:text-blue-600" />
                 </button>
 
                 <button
                   onClick={() =>
                     handleDelete(item.id)
                   }
-                  className="w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 flex items-center justify-center"
+                  className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-red-50 flex items-center justify-center transition"
+                  title="Delete"
                 >
                   <Trash2
-                    size={18}
-                    className="text-red-500"
+                    size={16}
+                    className="text-gray-500 hover:text-red-500"
                   />
                 </button>
-
               </div>
 
             </div>

@@ -27,7 +27,7 @@ function ATSScoreCard({
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 w-full">
+    <div className="w-full">
       <h2 className="text-2xl font-bold text-center">
         ATS Score
       </h2>
