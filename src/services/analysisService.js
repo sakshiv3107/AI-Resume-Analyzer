@@ -5,47 +5,52 @@ const ai = new GoogleGenAI({
 });
 
 export const analyzeResume = async (resumeText, jobDescription = "") => {
-    const prompt = `
-You are an expert ATS (Applicant Tracking System), Senior HR Recruiter, Career Coach, and Resume Reviewer.
+const prompt = `
+You are an expert ATS (Applicant Tracking System) engine, Senior Technical Recruiter, and Resume Auditor.
+You do NOT flatter candidates. You score strictly, like a real ATS + human recruiter combined, using only evidence present in the text below. Do not assume, infer, or invent anything not explicitly stated.
 
-Your task is to analyze a candidate's resume.
+--------------------------------------------------
+DETERMINISM RULE (IMPORTANT)
+--------------------------------------------------
+"ats_score" measures the INTRINSIC quality of the resume itself (structure, clarity, quantification, skills evidence, formatting signals, section completeness) and must be independent of any specific Job Description.
+- Compute it using ONLY the rubric in ATS_BREAKDOWN_RUBRIC below.
+- Given the exact same resume text, you MUST return the exact same "ats_score" and "ats_breakdown" every time — do not vary it based on tone, phrasing choices, or randomness. Treat this as a deterministic calculation, not a creative judgment.
+- "match_percentage" measures resume-to-JD overlap and legitimately changes every time the JD changes (or is absent). It is allowed to differ across runs when JD differs.
+- If NO JD is provided, match_percentage = ats_score exactly.
 
-The user may also provide a Job Description (JD).
+--------------------------------------------------
+ATS_BREAKDOWN_RUBRIC (use these fixed weights, total = 100)
+--------------------------------------------------
+- skills (0-20): count of relevant, clearly-listed technical skills with evidence of actual use in projects/experience (not just listed).
+- experience (0-20): presence of real roles/internships, use of action verbs, clarity of responsibilities. 0 if no experience section exists.
+- education (0-10): completeness (degree, institution, year, CGPA/grade if present).
+- projects (0-20): number of projects, technical depth, presence of tech stack, live link/repo.
+- keywords (0-15): density and relevance of industry/role-standard keywords found in the resume text itself.
+- formatting (0-15): consistent structure, clear section headers, no walls of text, appropriate length (1 page for <3 yrs experience, up to 2 for senior).
+Sum these six sub-scores to get ats_score (cap at 90 max per rule below).
 
-If a Job Description is provided:
-- Compare the resume with the JD.
-- Evaluate how well the resume matches the role.
-- Calculate ATS score based on the JD.
-- Identify missing keywords.
-- Mention important skills missing from the resume.
-- Suggest improvements to increase the ATS score.
-
-If NO Job Description is provided:
-- Analyze the resume independently.
-- Evaluate formatting, skills, projects, education, experience, and resume quality.
-- Estimate ATS score based on general industry standards.
+--------------------------------------------------
+STRICTNESS RULES
+--------------------------------------------------
+- Do NOT give benefit-of-the-doubt. If a claim isn't quantified (no numbers, %, scale, impact), treat it as a weakness, not a strength.
+- Generic filler bullets ("responsible for", "worked on", "helped with") without outcomes should reduce the experience/projects sub-score and appear in weaknesses or red_flags.
+- A resume with no measurable achievements anywhere should score no higher than 55-60 overall, regardless of how many skills are listed.
+- Do not reward keyword-stuffing (skills listed but never used in any project/experience bullet) — flag it as a red flag instead of scoring it as a strength.
+- Most real-world resumes should land in the 40-75 range. Reserve 80-85 only for resumes with strong quantified impact, clean formatting, and strong keyword-role alignment. Reserve below 40 for resumes missing multiple core sections or with major red flags.
 
 --------------------------------------------------
 RESUME
 --------------------------------------------------
-
 ${resumeText}
 
 --------------------------------------------------
 JOB DESCRIPTION
 --------------------------------------------------
-
 ${jobDescription || "No Job Description Provided"}
 
 --------------------------------------------------
 
-Return ONLY valid JSON.
-
-Do NOT return markdown.
-
-Do NOT use \`\`\`json.
-
-Do NOT write explanations.
+Return ONLY valid JSON. Do NOT return markdown. Do NOT use \`\`\`json. Do NOT write explanations outside the JSON.
 
 The JSON schema MUST be exactly:
 
@@ -56,14 +61,15 @@ The JSON schema MUST be exactly:
   "strengths": [],
   "weaknesses": [],
   "missing_keywords": [],
+  "matched_skills": [],
   "missing_skills": [],
   "suggestions": [
-  {
-    "title": "",
-    "description": "",
-    "priority": ""
-  }
-],
+    {
+      "title": "",
+      "description": "",
+      "priority": ""
+    }
+  ],
   "detected_skills": [],
   "experience_level": "",
   "recommended_roles": [],
@@ -85,86 +91,36 @@ The JSON schema MUST be exactly:
 
 Rules:
 
-1. ATS Score must be between 0-90.
+1. ATS Score must be between 0-90, computed strictly from ATS_BREAKDOWN_RUBRIC above. It must stay identical across repeated runs on the same resume text.
 
-2. Match Percentage must be between 0-100.
+2. Match Percentage must be between 0-100, and is JD-dependent (can vary between runs if JD changes). If no JD, match_percentage = ats_score.
 
-3. Give at least 3 strengths.
+3. Give at least 3 strengths — each must reference a specific, concrete element actually present in the resume (a real project name, a real quantified bullet, a real skill). No generic praise.
 
-4. Give at least 3 weaknesses.
+4. Give at least 3 weaknesses — prioritize missing quantification, vague bullets, missing sections, weak keyword alignment.
 
-5. Return at least 3 suggestions.
+5. Return at least 3 suggestions. Each suggestion must be actionable and specific to this resume (not generic advice), and contain:
+   { "title": "", "description": "", "priority": "High | Medium | Low" }
 
-  Each suggestion must contain:
+6. missing_keywords: only include keywords genuinely absent from the resume that matter for the role/JD (or general industry standard if no JD).
 
-  {
-  "title":"",
-  "description":"",
-  "priority":"High | Medium | Low"
-  }
+7. missing_skills: only technical skills required by the JD but absent from the resume. Empty array if no JD.
 
-6. Give all important missing keywords.
+8. matched_skills: skills present in BOTH resume and JD. If no JD, matched_skills = detected_skills.
 
-7. Give all missing technical skills.
+9. detected_skills: all skills actually found in the resume text (do not infer skills from job titles alone).
 
-8. Return:
+10. recommended_roles: based only on evidence in the resume (skills + project domains + experience), not aspirational titles.
 
-    matched_skills:
-    Skills present in BOTH the resume and the Job Description.
+11. sections_found / sections_missing: check against ["Education","Skills","Projects","Experience","Certifications","Achievements","Summary"].
 
-    If there is no Job Description,
-    matched_skills should equal detected_skills.
+12. red_flags: include concrete issues such as no quantified achievements, no action verbs, inconsistent formatting, missing GitHub/LinkedIn, missing contact info, resume too short (<1 project/role), resume too long for experience level, keyword-stuffed but unused skills.
 
-    detected_skills:
-    All skills found in the resume.
+13. ats_breakdown sub-scores must sum to approximately ats_score (±2).
 
-    missing_skills:
-    Skills required by the Job Description but absent from the resume.
+14. Never invent experience, skills, metrics, or outcomes not present in the resume text. If information is unavailable, return [] or "".
 
-    If there is no Job Description,
-    return an empty array for missing_skills.
-
-9. Recommended roles should be based only on the resume.
-
-10. Sections Found should contain sections available in the resume such as:
-[
-"Education",
-"Skills",
-"Projects",
-"Experience",
-"Certifications",
-"Achievements",
-"Summary"
-]
-
-11. Sections Missing should include important missing sections.
-
-12. Red Flags should include issues like:
-- No quantified achievements
-- No action verbs
-- Poor formatting
-- Missing GitHub
-- Missing LinkedIn
-- Missing contact information
-- Short resume
-- Resume too lengthy
-
-13. The ATS Breakdown should total approximately 100.
-
-14. If Job Description is empty:
-- match_percentage should equal ats_score.
-- missing_keywords should be based on common industry expectations.
-
-15. Never invent experience that is not present.
-
-16. Never fabricate skills.
-
-17. If information is unavailable, return:
-[]
-or
-""
-
-18. Always return valid JSON.
+15. Always return valid, complete JSON matching the schema exactly — no extra keys, no missing keys.
 `;
   const ResumeSchema = {
   type: Type.OBJECT,

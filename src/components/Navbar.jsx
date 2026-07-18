@@ -1,7 +1,16 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useResume } from "../context/ResumeContext";
 
 function Navbar() {
+  const { setSelectedFile, setJobDescription, setAnalysis } = useResume();
+
+  const handleNewAnalysis = () => {
+    setSelectedFile(null);
+    setJobDescription("");
+    setAnalysis(null);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-white border-none shadow-sm">
       <nav>
@@ -60,6 +69,7 @@ function Navbar() {
           <div>
             <NavLink
                 to="/Dashboard"
+                onClick={handleNewAnalysis}
                 className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
                 >
                 New Analysis
