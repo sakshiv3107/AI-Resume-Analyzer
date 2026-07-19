@@ -32,6 +32,11 @@ function Dashboard() {
 
   loading,
   setLoading,
+
+  setResumeHash,
+  resumeText,
+  setResumeText,
+
 } = useResume();
 
   const handleAnalyze = async () => {
@@ -45,6 +50,7 @@ function Dashboard() {
     try {
       // Extract text
       const resumeText = await extractTextFromPDF(selectedFile);
+      setResumeText(resumeText);
 
       // AI Analysis
       const analysisResult = await analyzeResume(
@@ -79,16 +85,15 @@ function Dashboard() {
         await saveAnalysis({
           resumeId: uploadResult.resumeId,
           userId: user.id,
+          resumeText,
           jobDescription,
           analysis: analysisResult,
         });
-      console.log("Saved Analysis:", savedAnalysis);
-      console.log("Analysis Error:", analysisError);  
 
       if (analysisError) {
         throw analysisError;
       }
-      console.log(savedAnalysis.id);
+      setResumeHash(savedAnalysis.resume_hash);
       navigate(`/result/${savedAnalysis.id}`);
     } catch (error) {
       console.error(error);

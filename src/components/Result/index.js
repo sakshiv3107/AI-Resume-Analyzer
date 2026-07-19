@@ -6,3 +6,6 @@ export { default as AISuggestions } from "./AISuggestions";
 export { default as StrengthWeakness } from "./StrengthWeakness";
 export { default as ActionButtons } from "./ActionButtons";
 export { default as AISummary } from "./AISummary";
+export { default as CoverLetterGenerator } from "./CoverLetterGenerator";
+export { default as BulletRewriter } from "./BulletRewriter";
+export { default as InterviewPrep } from "./InterviewPrep";

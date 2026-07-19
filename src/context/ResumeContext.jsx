@@ -7,6 +7,8 @@ export function ResumeProvider({ children }) {
   const [jobDescription, setJobDescription] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [resumeHash, setResumeHash] = useState(null);
+  const [resumeText, setResumeText] = useState("");
 
   return (
     <ResumeContext.Provider
@@ -22,6 +24,12 @@ export function ResumeProvider({ children }) {
 
         loading,
         setLoading,
+
+        resumeHash,
+        setResumeHash,
+
+        resumeText,
+        setResumeText,
       }}
     >
       {children}

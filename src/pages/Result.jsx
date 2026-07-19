@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
+import ScoreHistory from "../components/Result/ScoreHistory";
+import { useAuth } from "../context/AuthContext";
 
 import {
   ResultHero,
@@ -8,6 +10,9 @@ import {
   StrengthWeakness,
   AISuggestions,
   ActionButtons,
+  CoverLetterGenerator,
+  BulletRewriter,
+  InterviewPrep,
 } from "../components/Result";
 
 import { useResume } from "../context/ResumeContext";
@@ -20,15 +25,22 @@ function Result() {
     analysis: contextAnalysis,
     selectedFile,
     jobDescription: contextJobDescription,
+    resumeHash: contextResumeHash,
+    setResumeHash,
+    resumeText: contextResumeText,
   } = useResume();
 
   const [analysis, setAnalysis] = useState(contextAnalysis);
   const [jobDescription, setJobDescription] = useState(
     contextJobDescription
   );
+  const { user } = useAuth();
   const [resumeUrl, setResumeUrl] = useState(null);
   const [fileName, setFileName] = useState(selectedFile?.name || "Resume.pdf");
   const [createdAt, setCreatedAt] = useState(new Date().toISOString());
+  const [resumeHash, setLocalResumeHash] = useState(contextResumeHash || null);
+  const [jdHash, setJdHash] = useState(null);
+  const [resumeText, setResumeText] = useState(contextResumeText || "");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,6 +63,14 @@ function Result() {
     setResumeUrl(data.resumes.file_url);
     setFileName(data.resumes.file_name || selectedFile?.name || "Resume.pdf");
     setCreatedAt(data.created_at);
+
+    // Fallback: context won't have this on a fresh page load / refresh / shared link
+    const hash = data.resume_hash;
+    setLocalResumeHash(hash);
+    setResumeHash(hash); // keep context in sync for other components
+    setResumeText(data.resume_text || "");
+    setJdHash(data.jd_hash || null);
+
     setLoading(false);
   };
 
@@ -113,10 +133,36 @@ function Result() {
           </div>
         </div>
 
+        {/* --- Bullet Rewriter --- */}
+        <div className="mb-8">
+          <BulletRewriter jobDescription={jobDescription} />
+        </div>
+
         {/* --- Bottom Row: What's Next & Tips --- */}
-        <div className="mb-12">
+        <div className="mb-8">
           <AISuggestions suggestions={analysis.suggestions} />
         </div>
+
+        {/* --- Interview Prep --- */}
+        <div className="mb-8">
+          <InterviewPrep resumeText={resumeText} jobDescription={jobDescription} />
+        </div>
+
+        <div className="mb-12">
+          <CoverLetterGenerator 
+            resumeText={resumeText} 
+            jobDescription={jobDescription} 
+            analysisId={id} 
+            resumeHash={resumeHash} 
+            jdHash={jdHash} 
+          />
+        </div>
+
+      {resumeHash && user && (
+        <div className="mb-12">
+          <ScoreHistory userId={user.id} resumeHash={resumeHash} />
+        </div>
+      )}
 
         {/* --- Action Buttons --- */}
         <ActionButtons
