@@ -1,9 +1,7 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { groq } from "./groqClient";
+import { callGeminiWithRetry } from "./geminiRetry";
 import { supabase } from "../supabase";
 
-const ai = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-});
 
 export const generateCoverLetter = async ({ resumeText, jobDescription, companyName, roleName, tone }) => {
   const prompt = `
@@ -80,45 +78,24 @@ export const generateCoverLetter = async ({ resumeText, jobDescription, companyN
    4. Always return valid, complete JSON matching the schema exactly.
    `;
 
-  const CoverLetterSchema = {
-    type: Type.OBJECT,
-    properties: {
-      greeting: { type: Type.STRING },
-      opening_paragraph: { type: Type.STRING },
-      body_paragraphs: {
-        type: Type.ARRAY,
-        items: { type: Type.STRING },
-      },
-      closing_paragraph: { type: Type.STRING },
-      sign_off: { type: Type.STRING },
-      full_text: { type: Type.STRING },
+
+const response = await groq.chat.completions.create({
+  model: "llama-3.3-70b-versatile",
+  messages: [
+    {
+      role: "system",
+      content: "Return only valid JSON."
     },
-    required: [
-      "greeting",
-      "opening_paragraph",
-      "body_paragraphs",
-      "closing_paragraph",
-      "sign_off",
-      "full_text",
-    ],
-  };
+    {
+      role: "user",
+      content: prompt
+    }
+  ],
+  temperature: 0,
+  response_format: { type: "json_object" },
+});
 
-    const response = await callGeminiWithRetry(() =>
-      ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: CoverLetterSchema,
-        },
-        thinkingConfig: {
-        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
-      }, 
-      })
-    );
-    
-
-  return JSON.parse(response.text);
+  return JSON.parse(response.choices[0].message.content);
 };
 
 export const saveCoverLetter = async ({

@@ -1,8 +1,5 @@
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-});
+import { groq } from "./groqClient";
+import { callGeminiWithRetry } from "./geminiRetry";
 
 export const rewriteBullet = async ({ originalBullet, context, jobDescription }) => {
   const prompt = `
@@ -83,39 +80,22 @@ export const rewriteBullet = async ({ originalBullet, context, jobDescription })
    4. Always return valid, complete JSON matching the schema exactly — exactly 3 variants, in the order specified.
    `;
 
-  const BulletRewriteSchema = {
-    type: Type.OBJECT,
-    properties: {
-      original_bullet: { type: Type.STRING },
-      variants: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            type: { type: Type.STRING },
-            text: { type: Type.STRING },
-            has_placeholder: { type: Type.BOOLEAN },
-          },
-          required: ["type", "text", "has_placeholder"],
-        },
-      },
-    },
-    required: ["original_bullet", "variants"],
-  };
 
-  const response = await callGeminiWithRetry(() =>
-    ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: BulletRewriteSchema,
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "system",
+        content: "Return only valid JSON."
       },
-      thinkingConfig: {
-        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
-      }, 
-    })
-  );
-  
-  return JSON.parse(response.text);
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
+    temperature: 0,
+    response_format: { type: "json_object" },
+  });
+
+  return JSON.parse(response.choices[0].message.content);
 };

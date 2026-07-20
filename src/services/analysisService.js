@@ -1,12 +1,8 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { groq } from "./groqClient";
 import { callGeminiWithRetry } from "./geminiRetry";
 
-const ai = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-});
-
 export const analyzeResume = async (resumeText, jobDescription = "") => {
-const prompt = `
+  const prompt = `
 You are an expert ATS (Applicant Tracking System) engine, Senior Technical Recruiter, and Resume Auditor.
 You do NOT flatter candidates. You score strictly, like a real ATS + human recruiter combined, using only evidence present in the text below. Do not assume, infer, or invent anything not explicitly stated.
 
@@ -123,179 +119,25 @@ Rules:
 
 15. Always return valid, complete JSON matching the schema exactly — no extra keys, no missing keys.
 `;
-  const ResumeSchema = {
-  type: Type.OBJECT,
-
-  properties: {
-    ats_score: {
-      type: Type.NUMBER,
-    },
-
-    match_percentage: {
-      type: Type.NUMBER,
-    },
-
-    summary: {
-      type: Type.STRING,
-    },
-
-    strengths: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    weaknesses: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    missing_keywords: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    missing_skills: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-   suggestions: {
-  type: Type.ARRAY,
-  items: {
-    type: Type.OBJECT,
-    properties: {
-      title: {
-        type: Type.STRING,
-      },
-      description: {
-        type: Type.STRING,
-      },
-      priority: {
-        type: Type.STRING,
-      },
-    },
-    required: [
-      "title",
-      "description",
-      "priority",
-    ],
-  },
-},
-
-    detected_skills: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    matched_skills: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    experience_level: {
-      type: Type.STRING,
-    },
-
-    recommended_roles: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    formatting_score: {
-      type: Type.NUMBER,
-    },
-
-    grammar_score: {
-      type: Type.NUMBER,
-    },
-
-    keyword_score: {
-      type: Type.NUMBER,
-    },
-
-    sections_found: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    sections_missing: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    red_flags: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.STRING,
-      },
-    },
-
-    ats_breakdown: {
-      type: Type.OBJECT,
-      properties: {
-        skills: { type: Type.NUMBER },
-        experience: { type: Type.NUMBER },
-        education: { type: Type.NUMBER },
-        projects: { type: Type.NUMBER },
-        keywords: { type: Type.NUMBER },
-        formatting: { type: Type.NUMBER },
-      },
-    },
-  },
-  required: [
-  "ats_score",
-  "match_percentage",
-  "summary",
-  "strengths",
-  "weaknesses",
-  "missing_keywords",
-  "missing_skills",
-  "suggestions",
-  "detected_skills",
-  "matched_skills",
-  "experience_level",
-  "recommended_roles",
-  "formatting_score",
-  "grammar_score",
-  "keyword_score",
-  "sections_found",
-  "sections_missing",
-  "red_flags",
-  "ats_breakdown",
-],
-};
   const response = await callGeminiWithRetry(() =>
-    ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: ResumeSchema,
-      },
-      thinkingConfig: {
-        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
-      },  
+    groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: "Return only valid JSON."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0,
+      response_format: { type: "json_object" },
     })
   );
 
-  return JSON.parse(response.text);
+  return JSON.parse(response.choices[0].message.content)
+
 };
 

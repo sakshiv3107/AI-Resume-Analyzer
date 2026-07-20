@@ -1,12 +1,8 @@
-import { GoogleGenAI } from "@google/genai";
+import { groq } from "./groqClient";
 import { callGeminiWithRetry } from "./geminiRetry";
 
-const ai = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-});
-
 /**
- * Send a chat message to Gemini with full conversation history and resume grounding.
+ * Send a chat message to Grok with full conversation history and resume grounding.
  *
  * @param {{
  *   resumeText: string,
@@ -80,30 +76,25 @@ improve specific parts, or general job-search/interview questions, using the gro
 rule above at all times.
 `;
 
-  // Map stored history to Gemini's multi-turn content format
-  const historyContents = conversationHistory.map(({ role, content }) => ({
-    role: role === "assistant" ? "model" : "user",
-    parts: [{ text: content }],
+  // Map stored history to OpenAI-style messages format
+  const historyMessages = conversationHistory.map(({ role, content }) => ({
+    role: role === "assistant" ? "assistant" : "user",
+    content,
   }));
 
-  // Append the new user turn at the end
-  const contents = [
-    ...historyContents,
-    { role: "user", parts: [{ text: userMessage }] },
+  // System instruction goes as its own message at the top, then history, then the new turn
+  const messages = [
+    { role: "system", content: systemInstruction },
+    ...historyMessages,
+    { role: "user", content: userMessage },
   ];
 
   const response = await callGeminiWithRetry(() =>
-    ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents,
-      config: {
-        systemInstruction,
-      },
-      thinkingConfig: {
-        thinkingBudget: 0,
-      },
+    groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages,
     })
   );
 
-  return response.text;
+  return response.choices[0].message.content;
 };

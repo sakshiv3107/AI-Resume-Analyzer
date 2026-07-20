@@ -1,8 +1,5 @@
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-});
+import { groq } from "./groqClient";
+import { callGeminiWithRetry } from "./geminiRetry";
 
 export const generateInterviewQuestions = async ({ resumeText, jobDescription }) => {
   const prompt = `
@@ -64,71 +61,24 @@ export const generateInterviewQuestions = async ({ resumeText, jobDescription })
    5. Always return valid, complete JSON matching the schema exactly.
    `;
 
-  const InterviewQuestionsSchema = {
-    type: Type.OBJECT,
-    properties: {
-      project_deep_dive: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            question: { type: Type.STRING },
-            why_asked: { type: Type.STRING },
-          },
-          required: ["question", "why_asked"],
-        },
-      },
-      technical_skills: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            question: { type: Type.STRING },
-            why_asked: { type: Type.STRING },
-          },
-          required: ["question", "why_asked"],
-        },
-      },
-      behavioral: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            question: { type: Type.STRING },
-            why_asked: { type: Type.STRING },
-          },
-          required: ["question", "why_asked"],
-        },
-      },
-      gap_probing: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            question: { type: Type.STRING },
-            why_asked: { type: Type.STRING },
-          },
-          required: ["question", "why_asked"],
-        },
-      },
-    },
-    required: ["project_deep_dive", "technical_skills", "behavioral", "gap_probing"],
-  };
 
-    const response = await callGeminiWithRetry(() =>
-      ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: InterviewQuestionsSchema,
+const response = await callGeminiWithRetry(() =>
+    groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: "Return only valid JSON."
         },
-        thinkingConfig: {
-        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
-      }, 
-      })
-    );
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0,
+      response_format: { type: "json_object" }, // enforce valid JSON syntax at the API level
+    })
+  );
 
-
-  return JSON.parse(response.text);
+  return JSON.parse(response.choices[0].message.content);
 };
