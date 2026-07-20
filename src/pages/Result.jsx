@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ScoreHistory from "../components/Result/ScoreHistory";
 import { useAuth } from "../context/AuthContext";
 
@@ -36,6 +36,7 @@ function Result() {
     contextJobDescription
   );
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [resumeUrl, setResumeUrl] = useState(null);
   const [fileName, setFileName] = useState(selectedFile?.name || "Resume.pdf");
   const [createdAt, setCreatedAt] = useState(new Date().toISOString());
@@ -169,6 +170,28 @@ function Result() {
           <ScoreHistory userId={user.id} resumeHash={resumeHash} />
         </div>
       )}
+
+        {/* --- Chat CTA: only for logged-in users with a persisted analysis --- */}
+        {id && user && (
+          <div className="mb-6">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-base font-bold text-gray-900 font-serif tracking-tight">
+                  Chat about this resume
+                </h2>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Ask a career coach AI anything — role fit, improvements, interview tips.
+                </p>
+              </div>
+              <button
+                onClick={() => navigate(`/chat/${id}`)}
+                className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-sm"
+              >
+                Open Chat →
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* --- Action Buttons --- */}
         <ActionButtons

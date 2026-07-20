@@ -290,6 +290,9 @@ Rules:
         responseMimeType: "application/json",
         responseSchema: ResumeSchema,
       },
+      thinkingConfig: {
+        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
+      },  
     })
   );
 

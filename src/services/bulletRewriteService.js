@@ -111,6 +111,9 @@ export const rewriteBullet = async ({ originalBullet, context, jobDescription })
         responseMimeType: "application/json",
         responseSchema: BulletRewriteSchema,
       },
+      thinkingConfig: {
+        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
+      }, 
     })
   );
   

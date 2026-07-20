@@ -6,7 +6,7 @@ import App from './App.jsx'
 
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import {Dashboard,Login, Result,Home, Signup,History,Settings} from './pages'
+import {Dashboard,Login, Result, Home, Signup, History, Settings, Chat} from './pages'
 import { AuthProvider } from './context/AuthContext'
 import { ResumeProvider } from './context/ResumeContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -39,6 +39,8 @@ const router = createBrowserRouter(
         />
       </Route>
 
+      {/* Focused tool pages — no navbar/footer chrome */}
+      <Route path="/chat/:id" element={<Chat />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
     </>

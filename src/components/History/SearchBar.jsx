@@ -6,7 +6,7 @@ function SearchBar({
   setSearchTerm,
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mt-5">
 
       <div className="relative">
 

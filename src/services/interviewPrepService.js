@@ -123,6 +123,9 @@ export const generateInterviewQuestions = async ({ resumeText, jobDescription })
           responseMimeType: "application/json",
           responseSchema: InterviewQuestionsSchema,
         },
+        thinkingConfig: {
+        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
+      }, 
       })
     );
 

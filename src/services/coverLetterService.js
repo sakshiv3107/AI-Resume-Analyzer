@@ -111,6 +111,9 @@ export const generateCoverLetter = async ({ resumeText, jobDescription, companyN
           responseMimeType: "application/json",
           responseSchema: CoverLetterSchema,
         },
+        thinkingConfig: {
+        thinkingBudget: 0, // disables thinking — big latency win for extraction/scoring tasks
+      }, 
       })
     );
     

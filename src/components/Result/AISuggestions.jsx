@@ -64,8 +64,8 @@ function AISuggestions({ suggestions = [] }) {
               <button className={`flex items-center gap-1.5 text-sm font-semibold transition-colors ${
                 isHighPriority ? "text-blue-600 hover:text-blue-800" : "text-green-600 hover:text-green-800"
               }`}>
-                {index === 0 ? "View Example Snippet" : "See Template"}
-                <ArrowRight size={16} />
+                
+                
               </button>
             </div>
           );
