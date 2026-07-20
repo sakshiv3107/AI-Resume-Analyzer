@@ -3,6 +3,7 @@ import { LogOut, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 import ConfirmationModal from "./ConfirmationModal";
+import Home from "../../pages/Home";
 
 function DangerZone() {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ function DangerZone() {
   const handleLogout = async () => {
     setLoggingOut(true);
 
+    navigate("/", { replace: true });
+
     const { error } = await supabase.auth.signOut();
 
     setLoggingOut(false);
@@ -26,7 +29,6 @@ function DangerZone() {
       return;
     }
 
-    navigate("/");
   };
 
   const handleDelete = async () => {
@@ -35,7 +37,7 @@ function DangerZone() {
     // We'll implement actual deletion later
     setTimeout(() => {
       setDeleting(false);
-      setShowModal(false);
+      setShowDeleteModal(false);
 
       alert(
         "Account deletion will be connected to Supabase Edge Functions in the next step."

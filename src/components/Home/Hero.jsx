@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from "../../context/AuthContext";
 
 function Hero() {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();   // was: currentUser
 
   return (
     <>
@@ -24,7 +24,7 @@ function Hero() {
                             >
                             Get Started
                         </NavLink>
-                        {currentUser && (
+                        {!user && (
                             <NavLink
                             to="/login"
                             className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"

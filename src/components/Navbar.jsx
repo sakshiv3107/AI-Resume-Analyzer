@@ -1,9 +1,12 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
+import { useAuth } from "../context/AuthContext";
+import { User } from "lucide-react";
 
 function Navbar() {
   const { setSelectedFile, setJobDescription, setAnalysis } = useResume();
+  const { user } = useAuth();
 
   const handleNewAnalysis = () => {
     setSelectedFile(null);
@@ -66,13 +69,37 @@ function Navbar() {
           </div>
 
           {/* Right Section */}
-          <div>
-            <NavLink
-                to="/Dashboard"
-                onClick={handleNewAnalysis}
-                className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+          <div className="flex items-center gap-6">
+            {/* User status / Login link */}
+            {user ? (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-200" title={user.email}>
+                <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center">
+                  <User size={12} className="text-blue-600" />
+                </div>
+                <span className="text-xs font-medium text-gray-600 max-w-[140px] truncate">
+                  {user.email.split("@")[0]}
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-100">
+                  Guest
+                </span>
+                <NavLink
+                  to="/login"
+                  className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition"
                 >
-                New Analysis
+                  Log In
+                </NavLink>
+              </div>
+            )}
+
+            <NavLink
+              to="/Dashboard"
+              onClick={handleNewAnalysis}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
+            >
+              New Analysis
             </NavLink>
           </div>
 
