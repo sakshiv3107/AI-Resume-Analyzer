@@ -13,12 +13,25 @@ function UploadCard({selectedFile,setSelectedFile}) {
 
     if (!file) return;
 
-    const allowed = [
-      "application/pdf",
-    ];
+    const DOCX_MIME =
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+    const allowed = ["application/pdf", DOCX_MIME];
+
+    // Detect legacy .doc — cannot be parsed client-side, ask user to convert
+    if (
+      file.type === "application/msword" ||
+      (file.name.toLowerCase().endsWith(".doc") &&
+        !file.name.toLowerCase().endsWith(".docx"))
+    ) {
+      setError(
+        "Old .doc format isn't supported — please save/export as .docx or PDF."
+      );
+      return;
+    }
 
     if (!allowed.includes(file.type)) {
-      setError("Only PDF or DOC/DOCX files are allowed.");
+      setError("Only PDF or DOCX files are allowed.");
       return;
     }
 
@@ -48,7 +61,7 @@ function UploadCard({selectedFile,setSelectedFile}) {
       <input
         type="file"
         id="resume-upload"
-        accept=".pdf,.doc,.docx"
+        accept=".pdf,.docx"
         hidden
         onChange={handleFileChange}
       />

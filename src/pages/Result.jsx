@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import {
   ResultHero,
   ATSScoreCard,
+  ATSHeatmap,
   KeywordAnalysis,
   StrengthWeakness,
   AISuggestions,
@@ -109,6 +110,11 @@ function Result() {
               matchPercentage={analysis.match_percentage}
             />
           </div>
+        </div>
+
+        {/* --- ATS Heatmap: breakdown of the top-row score --- */}
+        <div className="mb-6">
+          <ATSHeatmap breakdown={analysis.ats_breakdown} />
         </div>
 
         {/* --- Middle Row: Keywords & Strengths/Weaknesses --- */}

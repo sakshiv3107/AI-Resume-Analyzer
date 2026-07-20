@@ -6,12 +6,13 @@ import {
   JobDescription,
   StatsCard,
   RecentAnalysis,
+  AnalysisLoadingOverlay
 } from "../components/Dashboard";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useResume } from "../context/ResumeContext";
 
-import { extractTextFromPDF } from "../services/pdfService";
+import { extractResumeText } from "../services/resumeTextService";
 import { analyzeResume } from "../services/analysisService";
 import { uploadResume } from "../services/resumeService";
 import { saveAnalysis } from "../services/historyService";
@@ -49,7 +50,7 @@ function Dashboard() {
 
     try {
       // Extract text
-      const resumeText = await extractTextFromPDF(selectedFile);
+      const resumeText = await extractResumeText(selectedFile);
       setResumeText(resumeText);
 
       // AI Analysis
@@ -97,13 +98,16 @@ function Dashboard() {
       navigate(`/result/${savedAnalysis.id}`);
     } catch (error) {
       console.error(error);
-      alert(error.message || "Something went wrong.");
+      alert(error.friendlyMessage || error.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
   return (
     <div className="bg-gray-50/50 min-h-screen animate-fadeIn">
+      {loading && (
+      <AnalysisLoadingOverlay hasJobDescription={jobDescription.trim().length > 0} />
+    )}
       <div className="max-w-6xl mx-auto px-6 py-8">
 
         {/* Header */}

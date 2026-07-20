@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { callGeminiWithRetry } from "./geminiRetry";
 
 const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_GEMINI_API_KEY,
@@ -281,16 +282,16 @@ Rules:
   "ats_breakdown",
 ],
 };
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-
-    contents: prompt,
-
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: ResumeSchema,
-    },
-  });
+  const response = await callGeminiWithRetry(() =>
+    ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: ResumeSchema,
+      },
+    })
+  );
 
   return JSON.parse(response.text);
 };

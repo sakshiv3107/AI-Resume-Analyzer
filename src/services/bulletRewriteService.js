@@ -103,14 +103,16 @@ export const rewriteBullet = async ({ originalBullet, context, jobDescription })
     required: ["original_bullet", "variants"],
   };
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: BulletRewriteSchema,
-    },
-  });
-
+  const response = await callGeminiWithRetry(() =>
+    ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: BulletRewriteSchema,
+      },
+    })
+  );
+  
   return JSON.parse(response.text);
 };

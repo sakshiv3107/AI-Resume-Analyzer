@@ -103,14 +103,17 @@ export const generateCoverLetter = async ({ resumeText, jobDescription, companyN
     ],
   };
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: CoverLetterSchema,
-    },
-  });
+    const response = await callGeminiWithRetry(() =>
+      ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: CoverLetterSchema,
+        },
+      })
+    );
+    
 
   return JSON.parse(response.text);
 };

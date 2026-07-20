@@ -115,14 +115,17 @@ export const generateInterviewQuestions = async ({ resumeText, jobDescription })
     required: ["project_deep_dive", "technical_skills", "behavioral", "gap_probing"],
   };
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: InterviewQuestionsSchema,
-    },
-  });
+    const response = await callGeminiWithRetry(() =>
+      ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: InterviewQuestionsSchema,
+        },
+      })
+    );
+
 
   return JSON.parse(response.text);
 };

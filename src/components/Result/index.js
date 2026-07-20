@@ -9,3 +9,4 @@ export { default as AISummary } from "./AISummary";
 export { default as CoverLetterGenerator } from "./CoverLetterGenerator";
 export { default as BulletRewriter } from "./BulletRewriter";
 export { default as InterviewPrep } from "./InterviewPrep";
+export { default as ATSHeatmap } from "./ATSHeatmap";
